@@ -1,0 +1,31 @@
+.block
+  .secondary-navigation
+    %ul.wat-cf
+      %li.first.active= link_to "#{t("web-app-theme.list", :default => "List")}", contacts_path
+      %li= link_to "New Person", new_person_contacts_url
+      %li= link_to "New Company", new_company_contacts_url
+  .content
+    %h2.title= "#{t("web-app-theme.all", :default => "All")} Contacts" 
+    .inner
+      %table.table
+        %tr
+          %th.first ID 
+          %th Name
+          %th Type
+          %th Created at
+          %th.last &nbsp;
+        - @contacts.each do |contact|
+          %tr{:class => cycle("odd","even")}
+            %td= contact.id
+            %td= link_to contact.name, contact_path(contact)
+            %td= contact.type.titleize
+            %td= contact.created_at
+            %td.last
+              = link_to "#{t("web-app-theme.show", :default => "Show")}", contact_path(contact)
+              = #link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_contact_path(contact)
+              = #link_to "#{t("web-app-theme.delete", :default => "Delete")}", contact_path(contact), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
+      .actions-bar.wat-cf
+        .actions
+      	
+
+- content_for :sidebar, render(:partial => 'sidebar')

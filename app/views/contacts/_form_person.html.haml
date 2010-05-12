@@ -1,0 +1,33 @@
+= f.error_messages
+.group
+  = f.label :first_name, t("activerecord.attributes.contact.first_name", :default => "First name"), :class => :label
+  = f.text_field :first_name, :class => 'text_field'
+  %span.description Ex: a simple text
+
+.group
+  = f.label :last_name, t("activerecord.attributes.contact.last_name", :default => "Last name"), :class => :label
+  = f.text_field :last_name, :class => 'text_field'
+  %span.description Ex: a simple text
+
+.group
+  = f.label :title, t("activerecord.attributes.contact.title", :default => "Title"), :class => :label
+  = f.text_field :title, :class => 'text_field'
+  %span.description Ex: a simple text
+
+.group
+  = f.label :notes, t("activerecord.attributes.contact.notes", :default => "Notes"), :class => :label
+  = f.text_area :notes, :rows => 3, :class => 'text_area'
+  %span.description Ex: a simple text
+
+.group
+  = f.label :company, t("activerecord.attributes.contact.company", :default => "Company"), :class => :label
+  = f.text_field :company, :class => 'text_field'
+  %span.description Ex: a simple text
+
+= f.hidden_field :type, :value => 'person'
+        
+.group.navform.wat-cf
+  %button.button{:type => 'submit'}
+    =image_tag("web-app-theme/tick.png", :alt => "#{t("web-app-theme.save", :default => "Save")}")
+    =t("web-app-theme.save", :default => "Save")
+  = link_to "#{image_tag("web-app-theme/cross.png", :alt => "#{t("web-app-theme.cancel", :default => "Cancel")}")} #{t("web-app-theme.cancel", :default => "Cancel")}", contacts_path, :class => "button"

@@ -1,0 +1,11 @@
+nbproject
+.project
+*.log
+*.tmp
+*~
+*.pid
+tmp/template
+public/system
+tmp/*
+coverage/*
+rerun.txt
