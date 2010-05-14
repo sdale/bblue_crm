@@ -52,9 +52,15 @@ module BatchBook
       base.site_format = '%s'
       super
     end
+    def attributes=(data)
+      data.each do |key, value|
+        self.send(key+'=', value)
+      end
+    end
   end
   
   class Person < Base
+  
     def type
       'person'
     end
@@ -98,12 +104,21 @@ module BatchBook
       raise Error, "#{tag} is not a BatchBook::Tag" unless tag.kind_of?(BatchBook::Tag)
       tag.put(:remove_from, :contact_id => id)
     end
+
+    protected
+
+    def validate
+      errors.add("first_name", "can't be blank.") if self.first_name.blank?
+    end
+
   end
 
   class Company < Base
+    
     def type
       'company'
     end
+
     def tags
       Tag.find(:all, :params => {:contact_id => id})
     end          

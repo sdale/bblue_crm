@@ -2,8 +2,8 @@
   .secondary-navigation
     %ul.wat-cf
       %li.first.active= link_to "#{t("web-app-theme.list", :default => "List")}", contacts_path
-      %li= link_to "New Person", new_person_contacts_url
-      %li= link_to "New Company", new_company_contacts_url
+      %li= link_to "New Person", url_for(:action => :new, :type => 'person')
+      %li= link_to "New Company", url_for(:action => :new, :type => 'company')
   .content
     %h2.title= "#{t("web-app-theme.all", :default => "All")} Contacts" 
     .inner
@@ -22,8 +22,8 @@
             %td= contact.created_at
             %td.last
               = link_to "#{t("web-app-theme.show", :default => "Show")}", contact_path(contact)
-              = #link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_contact_path(contact)
-              = #link_to "#{t("web-app-theme.delete", :default => "Delete")}", contact_path(contact), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
+              = link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_contact_path(contact)
+              = link_to "#{t("web-app-theme.delete", :default => "Delete")}", contact_path(contact), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
       .actions-bar.wat-cf
         .actions
       	

@@ -23,17 +23,6 @@ Rails::Initializer.run do |config|
   config.gem 'haml',                    :version => '2.2.17'
   config.gem 'will_paginate',           :version => '2.3.12'
 
-  if [ 'test', 'cucumber' ].include?( RAILS_ENV )
-    config.gem "rspec",                   :lib => false,       :version => '1.3.0'
-    config.gem "rspec-rails",             :lib => false,       :version => '1.3.2'
-    config.gem "remarkable_rails",        :lib => false,       :version => '3.1.12'
-    config.gem 'cucumber',                :lib => false,       :version => '0.6.2'
-    config.gem 'cucumber-rails',          :lib => false,       :version => '0.2.4'
-    config.gem 'webrat',                  :lib => false,       :version => '0.7.0'
-    config.gem 'factory_girl',            :lib => false,       :version => '1.2.3'
-    config.gem 'email_spec',              :lib => false,       :version => '0.4.0'
-  end
-
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
