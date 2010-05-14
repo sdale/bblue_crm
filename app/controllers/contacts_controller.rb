@@ -1,17 +1,63 @@
 class ContactsController < ApplicationController
+
+  before_filter :get_contact, :except => [:index, :new]
+
   def index
     @contacts = BatchBook::Person.find(:all) |  BatchBook::Company.find(:all)
   end
 
-  def new_person
-    @contact = Person.new
-  end
-
-  def new_company
-    @contact = Company.new
+  def new
+    @type = params[:type]
   end
 
   def show
+  end
+
+  def edit
+  end
+
+  def destroy
+    @contact.destroy
+    flash[:notice]  = "Contact successfully removed!"
+    redirect_to :action => :index
+  end
+
+  def create
+    type = params[:type]
+    @contact = if type == 'person'
+      BatchBook::Person.new params[:contact]
+    else
+      BatchBook::Company.new params[:contact]
+    end
+
+    if @contact.save
+      flash[:notice]  = "#{type.titleize} successfully created!"
+      redirect_to :action => :index
+    else
+      flash.now[ :error ] = @contact.errors.full_messages.join( ", " )
+      render "new_#{type}"
+    end
+  end
+
+  def update
+    type = params[:type]
+    @contact.attributes = if type == 'person'
+      params[:batch_book_person]
+    else
+      params[:batch_book_company]
+    end
+    if @contact.save
+      flash[:notice]  = "#{type.titleize} successfully updated!"
+      redirect_to :action => :index
+    else
+      flash.now[ :error ] = @contact.errors.full_messages.join( ", " )
+      render :edit
+    end
+  end
+  
+  private
+
+  def get_contact
     begin
       @contact = BatchBook::Person.find(params[:id])
     rescue
@@ -21,36 +67,10 @@ class ContactsController < ApplicationController
         @contact = nil
       end
     end
-
-    @attributes = @contact.attributes.map{|array| array.first}.delete_if { |value| ['id', 'locations', 'created_at', 'updated_at'].include?(value)  }
-    @locations = @contact.locations unless @contact.nil?
-  end
-
-  def create_person
-    @person = Person.new params[:contact]
-    if @person.valid?
-      flash[:notice]  = 'Person successfully created!'
-      contact = BatchBook::Person.new params[:contact]
-      contact.save
-      redirect_to :action => :index
-    else
-      flash.now[ :error ] = @person.errors.full_messages.join( ", " )
-      render :new_person
+    unless @contact.nil?
+      @attributes = @contact.attributes.map{|array| array.first}.delete_if { |value| ['id', 'locations', 'tags', 'created_at', 'updated_at'].include?(value)  }
+      @locations = @contact.locations
     end
   end
   
-   def create_company
-    @company = Company.new params[:contact]
-    if @company.valid?
-      flash[:notice]  = 'Person successfully created!'
-      contact = BatchBook::Company.new params[:contact]
-      contact.save
-      redirect_to :action => :index
-    else
-      flash.now[ :error ] = @company.errors.full_messages.join( ", " )
-      render :new_company
-    end
-  end
-
-
 end

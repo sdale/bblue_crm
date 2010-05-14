@@ -24,7 +24,7 @@
   = f.text_field :company, :class => 'text_field'
   %span.description Ex: a simple text
 
-= f.hidden_field :type, :value => 'person'
+= hidden_field_tag 'type', 'person'
         
 .group.navform.wat-cf
   %button.button{:type => 'submit'}
