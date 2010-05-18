@@ -16,12 +16,6 @@ class ContactsController < ApplicationController
   def edit
   end
 
-  def destroy
-    @contact.destroy
-    flash[:notice]  = "Contact successfully removed!"
-    redirect_to :action => :index
-  end
-
   def create
     type = params[:type]
     @contact = if type == 'person'
@@ -53,6 +47,12 @@ class ContactsController < ApplicationController
       flash.now[ :error ] = @contact.errors.full_messages.join( ", " )
       render :edit
     end
+  end
+
+  def destroy
+    @contact.destroy
+    flash[:notice]  = "Contact successfully removed!"
+    redirect_to :action => :index
   end
   
   private

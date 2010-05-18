@@ -9,8 +9,5 @@
     %h2.title= "#{t("web-app-theme.edit", :default => "Edit")} #{@contact.type.titleize}"
     .inner
       - form_for @contact, :url => contact_path(@contact), :html => { :class => :form } do |f|
-        - if @contact.type == 'person'
-          = render :partial => "form_person", :locals => {:f => f}
-        - else
-          = render :partial => "form_company", :locals => {:f => f}
+        = render :partial => "form_#{@contact.type}", :locals => {:f => f}
 - content_for :sidebar, render(:partial => 'sidebar')       	

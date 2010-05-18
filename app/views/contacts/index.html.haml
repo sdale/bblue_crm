@@ -7,25 +7,28 @@
   .content
     %h2.title= "#{t("web-app-theme.all", :default => "All")} Contacts" 
     .inner
-      %table.table
-        %tr
-          %th.first ID 
-          %th Name
-          %th Type
-          %th Created at
-          %th.last &nbsp;
-        - @contacts.each do |contact|
-          %tr{:class => cycle("odd","even")}
-            %td= contact.id
-            %td= link_to contact.name, contact_path(contact)
-            %td= contact.type.titleize
-            %td= contact.created_at
-            %td.last
-              = link_to "#{t("web-app-theme.show", :default => "Show")}", contact_path(contact)
-              = link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_contact_path(contact)
-              = link_to "#{t("web-app-theme.delete", :default => "Delete")}", contact_path(contact), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
-      .actions-bar.wat-cf
-        .actions
+      - unless @contacts.blank?
+        %table.table
+          %tr
+            %th.first ID
+            %th Name
+            %th Type
+            %th Created at
+            %th.last &nbsp;
+          - @contacts.each do |contact|
+            %tr{:class => cycle("odd","even")}
+              %td= contact.id
+              %td= link_to contact.name, contact_path(contact)
+              %td= contact.type.titleize
+              %td= contact.created_at
+              %td.last
+                = link_to "#{t("web-app-theme.show", :default => "Show")}", contact_path(contact)
+                = link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_contact_path(contact)
+                = link_to "#{t("web-app-theme.delete", :default => "Delete")}", contact_path(contact), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
+        .actions-bar.wat-cf
+          .actions
+      - else
+        There are no contacts available.
       	
 
 - content_for :sidebar, render(:partial => 'sidebar')

@@ -21,8 +21,7 @@
 
 .group
   = f.label :company, t("activerecord.attributes.contact.company", :default => "Company"), :class => :label
-  = f.text_field :company, :class => 'text_field'
-  %span.description Ex: a simple text
+  = f.select :company, companies_for_select
 
 = hidden_field_tag 'type', 'person'
         
