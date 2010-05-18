@@ -2,7 +2,7 @@
 module ApplicationHelper
 
   def people_for_select
-    BatchBook::Person.find(:all).map{ |p| [p.name]}.insert(0, ['', 'Select a person'])
+    BatchBook::Person.find(:all).map{ |p| [p.name]}.insert(0, ['Select a person', ''])
   end
 
   def companies_for_select

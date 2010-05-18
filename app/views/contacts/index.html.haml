@@ -20,7 +20,7 @@
               %td= contact.id
               %td= link_to contact.name, contact_path(contact)
               %td= contact.type.titleize
-              %td= contact.created_at
+              %td= contact.created_at.to_time.strftime("%a, %d %b %Y %H:%M:%S")
               %td.last
                 = link_to "#{t("web-app-theme.show", :default => "Show")}", contact_path(contact)
                 = link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_contact_path(contact)

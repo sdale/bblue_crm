@@ -11,7 +11,10 @@
           - unless @task.send(attr).blank?
             %p
               %strong= attr.to_s.titleize
-              =@task.send(attr)
+              - if attr=='due_date'
+                =@task.send(attr).to_time.strftime("%a, %d %b %Y %H:%M:%S")
+              - else
+                =@task.send(attr)
         .wat-cf
           = link_to "#{image_tag("web-app-theme/application_edit.png", :alt => "#{t("web-app-theme.edit", :default=> "Edit")}")} #{t("web-app-theme.edit", :default=> "Edit")}", edit_task_path(@task), :class => "button"
           = link_to "#{image_tag("web-app-theme/cross.png", :alt => "#{t("web-app-theme.delete", :default=> "Delete")}")} #{t("web-app-theme.delete", :default => "Delete")}", task_path(@task), :method => "delete", :class => "button", :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"

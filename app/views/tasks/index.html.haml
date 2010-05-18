@@ -17,7 +17,7 @@
             %tr{:class => cycle("odd","even")}
               %td= task.id
               %td= link_to task.title, task_path(task)
-              %td= task.due_date
+              %td= task.due_date.to_time.strftime("%a, %d %b %Y %H:%M:%S")
               %td.last
                 = link_to "#{t("web-app-theme.show", :default => "Show")}", task_path(task)
                 = link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_task_path(task)

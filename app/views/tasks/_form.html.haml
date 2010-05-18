@@ -10,6 +10,10 @@
   %span.description Ex: a simple text
 
 .group
+  = f.label :due_date, "Due Date", :class => :label
+  = f.datetime_select :due_date
+
+.group
   = f.label :assigned_to, "Assigned To", :class => :label
   = f.select :assigned_to, people_for_select
 
