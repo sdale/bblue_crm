@@ -164,6 +164,9 @@ module BatchBook
     end    
   end
 
+  class Deal < Base
+  end
+
   class Tag < Base
   end
 

@@ -8,4 +8,8 @@ module ApplicationHelper
   def companies_for_select
     BatchBook::Company.find(:all).map{ |c| [c.name]}.insert(0, ['Select a company','' ])
   end
+
+  def status_for_select
+    [['25%'],['50%'], ['75%'], ['90%'], ['100%'], ['Lost','lost']]
+  end
 end

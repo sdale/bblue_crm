@@ -1,0 +1,31 @@
+.block
+  .secondary-navigation
+    %ul.wat-cf
+      %li.first.active= link_to "#{t("web-app-theme.list", :default => "List")}", deals_path
+      %li= link_to "New Deal", new_deal_path
+  .content
+    %h2.title= "#{t("web-app-theme.all", :default => "All")} Deals"
+    .inner
+      - unless @deals.blank?
+        %table.table
+          %tr
+            %th.first ID
+            %th Title
+            %th Ammount
+            %th.last &nbsp;
+          - @deals.each do |deal|
+            %tr{:class => cycle("odd","even")}
+              %td= deal.id
+              %td= link_to deal.title, deal_path(deal)
+              %td= deal.amount
+              %td.last
+                = link_to "#{t("web-app-theme.show", :default => "Show")}", deal_path(deal)
+                = link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_deal_path(deal)
+                = link_to "#{t("web-app-theme.delete", :default => "Delete")}", deal_path(deal), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
+        .actions-bar.wat-cf
+          .actions
+      - else
+        There are no deals available.
+      	
+
+- content_for :sidebar, render(:partial => 'sidebar')

@@ -4,6 +4,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :contacts
   map.resources :tasks
+  map.resources :deals
   
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
