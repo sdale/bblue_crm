@@ -7,4 +7,6 @@ class ApplicationController < ActionController::Base
 
   BatchBook.account = 'uc'
   BatchBook.token = 'qhlCOlJYht'
+  BatchBook.per_page = 1000000
+
 end

@@ -14,6 +14,7 @@ class TasksController < ApplicationController
   end
 
   def edit
+    @task.due_date = @task.due_date.to_datetime
   end
 
   def create
@@ -31,7 +32,7 @@ class TasksController < ApplicationController
   def update
     @task.attributes = params[:batch_book_todo]
     if @task.save
-      flash[:notice]  = "#Task successfully updated!"
+      flash[:notice]  = "Task successfully updated!"
       redirect_to :action => :index
     else
       flash.now[ :error ] = @task.errors.full_messages.join( ", " )

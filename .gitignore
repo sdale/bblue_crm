@@ -4,7 +4,6 @@ nbproject
 *.tmp
 *~
 *.pid
-tmp/template
 public/system
 tmp/*
 coverage/*

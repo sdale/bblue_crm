@@ -32,6 +32,18 @@ module BatchBook
         r.user = value
       end
     end
+
+    def per_page=(value)
+      resources.each do |r|
+        r.per_page = value
+      end
+    end
+
+    def offset=(value)
+      resources.each do |r|
+        r.offset = value
+      end
+    end
  
     def resources
       @resources ||= []
@@ -47,7 +59,7 @@ module BatchBook
     def self.inherited(base)
       BatchBook.resources << base
       class << base
-        attr_accessor :site_format
+        attr_accessor :site_format, :per_page, :offset
       end
       base.site_format = '%s'
       super
@@ -56,6 +68,16 @@ module BatchBook
       data.each do |key, value|
         self.send(key+'=', value)
       end
+    end
+
+    def self.find(*args)
+      options = args.extract_options!
+      params = options[:params] || {}
+      params = params.merge(:limit => self.per_page)
+      params = params.merge(:offset => self.offset) unless self.offset.blank?
+      options = options.merge(:params => params)
+      args << options
+      super(*args)
     end
   end
   
