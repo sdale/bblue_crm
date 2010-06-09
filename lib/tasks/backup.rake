@@ -12,7 +12,6 @@ task :backup => :environment do
       system("mv #{Rails.root}/#{temp}.xml?limit=1000000 #{path}/#{temp}.xml")
   end
   contacts = BatchBook::Person.find(:all) | BatchBook::Company.find(:all)
-  contacts.sort! { |x, y| x.attributes['id'] <=> y.attributes['id']  }
   contacts.each do |contact|
     type = contact.type.pluralize
     id = contact.attributes['id']
