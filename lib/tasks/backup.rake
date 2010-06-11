@@ -7,7 +7,7 @@ task :backup => :environment do
   path = File.join( root_path, now.year.to_s, now.month.to_s, now.day.to_s )
   system("mkdir -p #{path}")
   system("mkdir -p #{path}/supertags")
-  ['people', 'companies', 'deals', 'tasks', 'communications', 'super_tags'].each do |temp|
+  %w{ people, companies, deals, tasks, communications, super_tags}.each do |temp|
       system("wget https://uc.batchbook.com/service/#{temp}.xml?limit=1000000 --user=#{token} --password=a")
       system("mv #{Rails.root}/#{temp}.xml?limit=1000000 #{path}/#{temp}.xml")
   end
@@ -20,6 +20,14 @@ task :backup => :environment do
       system("mv #{Rails.root}/super_tags.xml?limit=1000000 #{path}/supertags/#{id}.xml")
     end
   end
+  logs = Log.all(:conditions => {:published => Date.today.to_datetime..Date.tomorrow.to_datetime})
+  File.open("#{path}/daily_activities.txt", 'w') do |file|
+    attributes = %w{id entry_id published title content author updated}
+    file << attributes.map{|attr| attr.to_s}.join("\t") + "\n"
+    logs.each do |log|
+      file << attributes.map{|attr| log[attr].to_s}.join("\t") + "\n"
+    end
+  end unless logs.blank?
   system("zip tmp/BB_CRM_backup_#{now.strftime("%m%d%y")} -r #{path}")
   system("rm -r #{root_path}")
 end
