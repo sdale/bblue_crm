@@ -1,7 +1,7 @@
 desc 'Backup CRM data'
 task :backup => :environment do
-  token = 'qhlCOlJYht'
-  BatchBook.account, BatchBook.token, BatchBook.per_page  = 'uc', token, 1000000
+  token = 'IzYgSsNtaB'
+  BatchBook.account, BatchBook.token, BatchBook.per_page  = 'ucdev', token, 1000000
   root_path = "#{Rails.root}/tmp/backup"
   now = Time.now
   path = File.join( root_path, now.year.to_s, now.month.to_s, now.day.to_s )
