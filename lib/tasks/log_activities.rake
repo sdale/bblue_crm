@@ -1,6 +1,9 @@
 desc 'Parses a recent activity RSS feed and logs it in the database'
 task :log_activities => :environment do
   require 'open-uri'
+  require 'openssl'
+  
+  OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
   page = 1
   while true
     rss = SimpleRSS.parse open(ENV['feed_url']+"?page=#{page}")
