@@ -15,7 +15,7 @@ module BatchBook
   
   class Error < StandardError; end
   class << self
-    attr_accessor :token,:host_format, :site_format, :domain_format, :protocol, :path
+    attr_accessor :host_format, :site_format, :domain_format, :protocol, :path
     attr_reader :account, :token
  
     # Sets the account name, and updates all the resources with the new domain.
@@ -31,6 +31,7 @@ module BatchBook
       resources.each do |r|
         r.user = value
       end
+      @token = value
     end
 
     def per_page=(value)
