@@ -7,7 +7,7 @@ task :backup => :environment do
   system("mkdir -p #{path}")
   system("mkdir -p #{path}/supertags")
   %w{ people companies deals tasks communications super_tags}.each do |temp|
-      system("wget https://#{BatchBook.account}.batchbook.com/service/#{temp}.xml?limit=1000000 --user=#{BatchBook.token} --password=")
+      system("wget https://#{BatchBook.account}.batchbook.com/service/#{temp}.xml?limit=1000000 --no-check-certificate --user=#{BatchBook.token} --password=")
       system("mv #{Rails.root}/#{temp}.xml?limit=1000000 #{path}/#{temp}.xml")
   end
   contacts = BatchBook::Person.find(:all) | BatchBook::Company.find(:all)
@@ -15,7 +15,7 @@ task :backup => :environment do
     type = contact.type.pluralize
     id = contact.attributes['id']
     unless contact.supertags.blank?
-      system("wget https://#{BatchBook.account}.batchbook.com/service/#{type}/#{id}/super_tags.xml?limit=1000000 --user=#{BatchBook.token} --password=")
+      system("wget https://#{BatchBook.account}.batchbook.com/service/#{type}/#{id}/super_tags.xml?limit=1000000 --no-check-certificate --user=#{BatchBook.token} --password=")
       system("mv #{Rails.root}/super_tags.xml?limit=1000000 #{path}/supertags/#{id}.xml")
     end
   end
