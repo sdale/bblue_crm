@@ -17,7 +17,7 @@
 development:
   adapter: mysql
   encoding: utf8
-  database: bblue_test_development
+  database: bblue_crm_development
   username: root
   password:
 
@@ -28,7 +28,7 @@ development:
 test:
   adapter: mysql
   encoding: utf8
-  database: bblue_test_test
+  database: bblue_crm_test
   username: root
   password:
 
@@ -36,7 +36,7 @@ test:
 production:
   adapter: mysql
   encoding: utf8
-  database: bblue_test_production
+  database: bblue_crm_production
   username: root
   password:
 
