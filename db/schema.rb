@@ -11,16 +11,6 @@
 
 ActiveRecord::Schema.define(:version => 20100611141114) do
 
-  create_table "contacts", :force => true do |t|
-    t.string "first_name"
-    t.string "last_name"
-    t.string "title"
-    t.string "email"
-    t.string "phone"
-    t.text   "notes"
-    t.string "company"
-  end
-
   create_table "logs", :force => true do |t|
     t.integer  "entry_id",  :null => false
     t.datetime "published", :null => false
@@ -31,15 +21,5 @@ ActiveRecord::Schema.define(:version => 20100611141114) do
   end
 
   add_index "logs", ["entry_id"], :name => "index_logs_on_entry_id"
-
-  create_table "people", :force => true do |t|
-    t.string "first_name"
-    t.string "last_name"
-    t.string "title"
-    t.string "email"
-    t.string "phone"
-    t.text   "notes"
-    t.string "company"
-  end
 
 end
