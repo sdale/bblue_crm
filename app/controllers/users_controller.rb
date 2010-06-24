@@ -2,17 +2,16 @@
 class UsersController < ApplicationController
   
   #before_filter :login_required, :except => [:login]
+  before_filter :get_user, :only => [:show, :edit, :update, :destroy]
   
   def index
     @users = User.all
   end
   
   def show
-    @user = User.find params[:id]
   end
   
   def edit
-    @user = User.find params[:id]
   end
 
   def new
@@ -29,6 +28,16 @@ class UsersController < ApplicationController
       flash.now[:error] = @user.errors.full_messages.join( ", " )
       render :new
     end
+  end
+  
+  def update
+    @user.update_attributes params[:user]
+    redirect_to :users
+  end
+  
+  def destroy
+    @user.destroy
+    redirect_to :users
   end
   
   def login
@@ -49,6 +58,12 @@ class UsersController < ApplicationController
     reset_session
     flash[:notice] = "You have been logged out."
     redirect_back_or_default
+  end
+  
+  private
+  
+  def get_user
+    @user = User.find(params[:id])
   end
 
 end
