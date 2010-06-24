@@ -3,7 +3,7 @@
     .content
       .inner
         - form_tag deals_path, :method => :get, :class => 'form' do
-          #sidebar{:style => 'float:none;'}
+          #sidebar
             .block
               .filter-box
                 .left-
@@ -51,7 +51,7 @@
                   =# link_to "#{t("web-app-theme.show", :default => "Show")}", deal_path(deal)
                   =# link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_deal_path(deal)
                   =# link_to "#{t("web-app-theme.delete", :default => "Delete")}", deal_path(deal), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
-            %tr{:style => 'background-color: lightgrey;font-weight:bold'}
+            %tr.totals
               %td{:colspan => 3} Total   
               %td{:colspan => 2}= number_to_currency @deals.sum{|deal| deal.amount.to_f}
               %td{:colspan => 2}= number_to_currency @deals.sum{|deal| deal.expected.to_f}
