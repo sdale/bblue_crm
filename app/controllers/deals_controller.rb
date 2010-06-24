@@ -4,7 +4,13 @@ class DealsController < ApplicationController
 
 
   def index
-    @deals = BatchBook::Deal.find(:all)
+    @users = User.all
+    unless params[:deals].blank?
+      @deals = BatchBook::Deal.find_all_by_param(:assigned_to, params[:deals][:users]) unless params[:deals][:users].blank?
+      @deals = BatchBook::Deal.find_all_by_param(:status, params[:deals][:status]) unless params[:deals][:status].blank?
+    else
+      @deals = BatchBook::Deal.find(:all)
+    end
   end
 
   def new
@@ -39,7 +45,7 @@ class DealsController < ApplicationController
   def update
     @deal.attributes = params[:batch_book_deal]
     if @deal.save
-      flash[:notice]  = "#Deal successfully updated!"
+      flash[:notice]  = "Deal successfully updated!"
       redirect_to :action => :index
     else
       flash.now[ :error ] = @deal.errors.full_messages.join( ", " )

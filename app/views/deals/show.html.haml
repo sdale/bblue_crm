@@ -15,6 +15,5 @@
         .wat-cf
           = link_to "#{image_tag("web-app-theme/application_edit.png", :alt => "#{t("web-app-theme.edit", :default=> "Edit")}")} #{t("web-app-theme.edit", :default=> "Edit")}", edit_deal_path(@deal), :class => "button"
           = link_to "#{image_tag("web-app-theme/cross.png", :alt => "#{t("web-app-theme.delete", :default=> "Delete")}")} #{t("web-app-theme.delete", :default => "Delete")}", deal_path(@deal), :method => "delete", :class => "button", :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
-        - content_for :sidebar, render(:partial => 'sidebar')
       - else
         %h1 This deal doesn't exist!

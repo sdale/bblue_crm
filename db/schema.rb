@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100611141114) do
+ActiveRecord::Schema.define(:version => 20100624021236) do
 
   create_table "logs", :force => true do |t|
     t.integer  "entry_id",  :null => false
@@ -21,5 +21,17 @@ ActiveRecord::Schema.define(:version => 20100611141114) do
   end
 
   add_index "logs", ["entry_id"], :name => "index_logs_on_entry_id"
+
+  create_table "users", :force => true do |t|
+    t.string   "login",         :null => false
+    t.string   "name",          :null => false
+    t.string   "email",         :null => false
+    t.string   "salt",          :null => false
+    t.string   "password_hash", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
 end

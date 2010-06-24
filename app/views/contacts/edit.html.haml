@@ -9,5 +9,4 @@
     %h2.title= "#{t("web-app-theme.edit", :default => "Edit")} #{@contact.type.titleize}"
     .inner
       - form_for @contact, :url => contact_path(@contact), :html => { :class => :form } do |f|
-        = render :partial => "form_#{@contact.type}", :locals => {:f => f}
-- content_for :sidebar, render(:partial => 'sidebar')       	
+        = render :partial => "form_#{@contact.type}", :locals => {:f => f}      	

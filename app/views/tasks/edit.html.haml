@@ -9,4 +9,3 @@
     .inner
       - form_for @task, :url => task_path(@task), :html => { :class => :form } do |f|
         = render :partial => "form", :locals => {:f => f}
-- content_for :sidebar, render(:partial => 'sidebar')       	

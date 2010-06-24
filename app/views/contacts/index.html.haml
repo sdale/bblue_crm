@@ -10,7 +10,7 @@
       - unless @contacts.blank?
         %table.table
           %tr
-            %th.first ID
+            %th ID
             %th Name
             %th Type
             %th Created at
@@ -29,6 +29,3 @@
           .actions
       - else
         There are no contacts available.
-      	
-
-- content_for :sidebar, render(:partial => 'sidebar')

@@ -62,9 +62,10 @@ module BatchBook
       class << base
         attr_accessor :site_format, :per_page, :offset
       end
-      base.site_format = '%s'
+      base.site_format = '%s'      
       super
     end
+    
     def attributes=(data)
       data.each do |key, value|
         self.send(key+'=', value)
@@ -80,6 +81,13 @@ module BatchBook
       args << options
       super(*args)
     end
+    
+    def self.find_all_by_param(name, params)
+      array = []
+      params.each{|param|array += self.find(:all, :params => {name => param})}
+      array
+    end
+    
   end
   
   class Person < Base
@@ -188,6 +196,22 @@ module BatchBook
   end
 
   class Deal < Base
+    def expected
+      case self.status
+        when 'lost'
+          0
+        when '25%'
+          self.amount.to_f * 0.25
+        when '50%'
+          self.amount.to_f * 0.50
+        when '75%'
+          self.amount.to_f * 0.75
+        when '90%'
+          self.amount.to_f * 0.90
+        when '100%'
+          self.amount
+      end
+    end
   end
 
   class Tag < Base
@@ -198,7 +222,6 @@ module BatchBook
 
   class SuperTag < Base
   end
-  
 
 
 end

@@ -9,5 +9,3 @@
     .inner
       - form_for :contact, :url => contacts_path, :html => { :class => :form } do |f|
         = render :partial => "form_#{@type}", :locals => {:f => f}
-
-- content_for :sidebar, render(:partial => 'sidebar')

@@ -11,10 +11,14 @@
     <div id="header">
       <h1><a href="/">BatchBlue Integration</a></h1>
       <div id="user-navigation">
-        <ul class="wat-cf">
-          <li><a href="#"><%= t("web-app-theme.profile", :default => "Profile") %></a></li>
-          <li><a href="#"><%= t("web-app-theme.settings", :default => "Settings") %></a></li>
-          <li><a href="#" class="logout"><%= t("web-app-theme.logout", :default => "Logout") %></a></li>
+        <ul class="wat-cf"> 
+		  <% if current_user%>
+		  	  <li><%= link_to 'Profile', user_path(current_user) %></li>
+	          <li style="color:white">Logged in as <%= current_user.login %></li>
+	          <li><%= link_to 'Logoff',logoff_users_path, :class => 'logout'  %></li>
+		  <% else %>
+			  <li><%= link_to 'Login',login_users_path, :class => 'logout'  %></li>
+		  <% end %>
         </ul>
       </div>      
       <div id="main-navigation">
@@ -22,6 +26,7 @@
           <li><%=link_to "Contacts", contacts_path%></li>
           <li><%=link_to "Tasks", tasks_path%></li>
           <li><%=link_to "Deals", deals_path%></li>
+		  <li><%=link_to "Users", users_path%></li>
         </ul>
       </div>
     </div>    
@@ -40,9 +45,6 @@
             <p>Copyright &copy; <%= Time.now.year %> Used Cisco.</p>
           </div>      
         </div>
-      </div>
-      <div id="sidebar">
-        <%= yield :sidebar %>
       </div>
     </div>    
   </div>
