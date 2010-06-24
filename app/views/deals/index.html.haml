@@ -1,62 +1,62 @@
-.block
-  .secondary-navigation
-    %ul.wat-cf
-      %li.first.active= link_to "#{t("web-app-theme.list", :default => "List")}", deals_path
-      %li= link_to "New Deal", new_deal_path
-  .content
-    %h2.title= "#{t("web-app-theme.all", :default => "All")} Deals"
-    .inner
-      - form_tag deals_path, :method => :get, :class => 'form' do
-        #sidebar{:style => 'float:none;'}
-          .block
-            %h3 Filter Box
-            .filter-box
-              .left-
-                %h4 Users
-                - @users.in_groups_of( 2, false ) do |group|
-                  .left-.margin
-                    - group.each do |user|
-                      %p
-                        = check_box_tag 'deals[users][]', user.name
-                        = user.name
-              .right-
-                %h4 Status
-                - status_values.in_groups_of( 2, false ) do |group|
-                  .left-.margin
-                    - group.each do |num|
-                      %p
-                        = check_box_tag 'deals[status][]', num
-                        = num
-              %br.clear
-              = submit_tag "Filter", :id => 'filter_button'
-      - unless @deals.blank?
-        %table.table
-          %tr
-            %th.first ID
-            %th Title
-            %th Assigned To
-            %th Ammount
-            %th Status
-            %th Expected
-            %th.last &nbsp;
-          - @deals.each do |deal|
-            %tr{:class => cycle("odd","even")}
-              %td= deal.id
-              %td= link_to deal.title, deal_path(deal)
-              %td= deal.assigned_to
-              %td= number_to_currency deal.amount
-              %td= deal.status
-              %td= number_to_currency deal.expected
-              %td.last
-                = link_to "#{t("web-app-theme.show", :default => "Show")}", deal_path(deal)
-                = link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_deal_path(deal)
-                = link_to "#{t("web-app-theme.delete", :default => "Delete")}", deal_path(deal), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
-          %tr{:style => 'background-color: lightgrey;font-weight:bold'}
-            %td{:colspan => 3} Total   
-            %td{:colspan => 2}= number_to_currency @deals.sum{|deal| deal.amount.to_f}
-            %td{:colspan => 2}= number_to_currency @deals.sum{|deal| deal.expected.to_f}
-        .actions-bar.wat-cf
-          .actions
-      - else
-        There are no deals available.
+.deal
+  .block
+    .content
+      .inner
+        - form_tag deals_path, :method => :get, :class => 'form' do
+          #sidebar{:style => 'float:none;'}
+            .block
+              .filter-box
+                .left-
+                  %h4 Users
+                  - @users.in_groups_of( 2, false ) do |group|
+                    .left-.margin
+                      - group.each do |user|
+                        %p
+                          = check_box_tag 'deals[users][]', user.name
+                          = user.name
+                .right-
+                  %h4 Status
+                  - status_values.in_groups_of( 2, false ) do |group|
+                    .left-.margin
+                      - group.each do |num|
+                        %p
+                          = check_box_tag 'deals[status][]', num
+                          = num
+                %br.clear
+                = submit_tag "Filter", :id => 'filter_button'
+        - unless @deals.blank?
+          %h3
+            4 deals total for (users selected names here)
+          %table.table
+            %tr
+              %th Deal Name
+              %th With
+              %th Assigned To
+              %th Amount
+              %th Status
+              %th Expected
+              %th.last &nbsp;
+            - @deals.each do |deal|
+              %tr{:class => cycle("odd","even")}
+                %td
+                  = link_to deal.title, deal_path(deal)
+                  .deal_description
+                    = deal.description
+                %td= deal.deal_with
+                %td= deal.assigned_to
+                %td= number_to_currency deal.amount
+                %td= deal.status
+                %td= number_to_currency deal.expected
+                %td.last
+                  =# link_to "#{t("web-app-theme.show", :default => "Show")}", deal_path(deal)
+                  =# link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_deal_path(deal)
+                  =# link_to "#{t("web-app-theme.delete", :default => "Delete")}", deal_path(deal), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
+            %tr{:style => 'background-color: lightgrey;font-weight:bold'}
+              %td{:colspan => 3} Total   
+              %td{:colspan => 2}= number_to_currency @deals.sum{|deal| deal.amount.to_f}
+              %td{:colspan => 2}= number_to_currency @deals.sum{|deal| deal.expected.to_f}
+          .actions-bar.wat-cf
+            .actions
+        - else
+          There are no deals available.
       

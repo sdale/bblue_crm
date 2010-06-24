@@ -1,22 +1,14 @@
-#filter_button{
-	padding:2px;
-	margin:5px;
-}
+/* ************ DEALS ****************/
 
-.left-{
-	float:left;
-}
-
-.right-{
-	float:right;
-}
-
-.margin{
-	margin:5px;
-}
-
-.filter-box{
+.deal #filter_button 	{ padding:2px; margin:5px; }
+.deal .left-			{ float:left; }
+.deal .right-			{float:right; }
+.deal .margin 			{	margin:5px;}
+.deal .filter-box 		{
 	background-color:#E5E5E5;
 	font-size:14px;
-	padding: 0px 15px
+	padding: 0px 15px;
+	margin: 10px 0px 0px 0px;
 }
+
+.deal .deal_description	{color:gray; margin:2px 0 0 0;}

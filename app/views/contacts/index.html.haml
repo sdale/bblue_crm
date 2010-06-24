@@ -1,7 +1,7 @@
 .block
   .secondary-navigation
     %ul.wat-cf
-      %li.first.active= link_to "#{t("web-app-theme.list", :default => "List")}", contacts_path
+      %li.first.active= link_to "#{t("web-app-theme.list", :default => "Browse all")}", contacts_path
       %li= link_to "New Person", url_for(:action => :new, :type => 'person')
       %li= link_to "New Company", url_for(:action => :new, :type => 'company')
   .content
