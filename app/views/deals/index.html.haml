@@ -12,7 +12,7 @@
                     .left-.margin
                       - group.each do |user|
                         %p
-                          = check_box_tag 'deals[users][]', user.name
+                          = check_box_tag 'filter[users][]', user.name
                           = user.name
                 .right-
                   %h4 Status
@@ -20,13 +20,15 @@
                     .left-.margin
                       - group.each do |num|
                         %p
-                          = check_box_tag 'deals[status][]', num
+                          = check_box_tag 'filter[status][]', num
                           = num
                 %br.clear
                 = submit_tag "Filter", :id => 'filter_button'
         - unless @deals.blank?
           %h3
-            4 deals total for (users selected names here)
+            =@deals.count
+            deal(s) total for
+            =@selected_users.join(', ')
           %table.table
             %tr
               %th Deal Name

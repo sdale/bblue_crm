@@ -5,9 +5,17 @@ class DealsController < ApplicationController
 
   def index
     @users = User.all
-    unless params[:deals].blank?
-      @deals = BatchBook::Deal.find_all_by_param(:assigned_to, params[:deals][:users]) unless params[:deals][:users].blank?
-      @deals = BatchBook::Deal.find_all_by_param(:status, params[:deals][:status]) unless params[:deals][:status].blank?
+    @selected_users = ['everyone']
+    filter = params[:filter]
+    unless filter.blank?
+      unless filter[:users].blank?
+        @selected_users = User.all(:conditions => {:name => filter[:users]}).map{|user|user.name}
+        @deals = BatchBook::Deal.find_all_by_param(:assigned_to, @selected_users)
+      end
+      unless filter[:status].blank?
+        @status = filter[:status]
+        @deals = BatchBook::Deal.find_all_by_param(:status, @status)
+      end
     else
       @deals = BatchBook::Deal.find(:all)
     end
