@@ -9,7 +9,7 @@ class DealsController < ApplicationController
     filter = params[:filter]
     unless filter.blank?
       unless filter[:users].blank?
-        @selected_users = User.all(:conditions => {:name => filter[:users]}).map{|user|user.name}
+        @selected_users = filter[:users]
         @deals = BatchBook::Deal.find_all_by_param(:assigned_to, @selected_users)
       end
       unless filter[:status].blank?
