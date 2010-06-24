@@ -6,9 +6,14 @@ class ApplicationController < ActionController::Base
   #before_filter :login_required, :except => [:users]
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
-
-  BatchBook.account = 'ucdev'
-  BatchBook.token = 'IzYgSsNtaB'
-  BatchBook.per_page = 1000000
+  if Rails.env == 'development'
+    BatchBook.account = 'ucdev'
+    BatchBook.token = 'IzYgSsNtaB'
+    BatchBook.per_page = 1000000
+  else
+    BatchBook.account = 'uc'
+    BatchBook.token = 'qhlCOlJYht'
+    BatchBook.per_page = 1000000
+  end
 
 end
