@@ -17,7 +17,10 @@
 
 
 $( document ).ready( function () {
-  $('.money').priceFormat();
+	$('.money').priceFormat();
+	$('.date-pick').datePicker({
+		startDate: '01/01/1970'
+	});
 });
 
 //Price Format Plugin

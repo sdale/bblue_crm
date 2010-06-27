@@ -91,7 +91,6 @@ module BatchBook
   end
   
   class Person < Base
-  
     def type
       'person'
     end
@@ -107,45 +106,16 @@ module BatchBook
     def tags
       Tag.find(:all, :params => {:contact_id => id})
     end   
-    
-    def locations
-      self.get('locations')     
-    end
-
-    def location label
-      raise Error, "Location label not specified.  Usage:  person.location('label_name')" unless label
-      self.get('locations', :label => label)       
-    end
-    
-    def supertags    
-      self.get('super_tags')     
-    end
-    
-    def supertag name
-      raise Error, "SuperTag name not specified.  Usage:  person.supertag('tag_name')" unless name
-      self.get('super_tags', :name => name)         
-    end
-    
-    def add_tag tag
-      raise Error, "#{tag} is not a BatchBook::Tag" unless tag.kind_of?(BatchBook::Tag)
-      tag.put(:add_to, :contact_id => id)
-    end
-    
-    def remove_tag tag
-      raise Error, "#{tag} is not a BatchBook::Tag" unless tag.kind_of?(BatchBook::Tag)
-      tag.put(:remove_from, :contact_id => id)
-    end
 
     protected
 
     def validate
       errors.add("first_name", "can't be blank.") if self.first_name.blank?
+      errors.add("last_name", "can't be blank.") if self.last_name.blank?
     end
-
   end
 
-  class Company < Base
-    
+  class Company < Base  
     def type
       'company'
     end
@@ -153,34 +123,6 @@ module BatchBook
     def tags
       Tag.find(:all, :params => {:contact_id => id})
     end          
-    
-    def locations
-      self.get('locations')     
-    end
-    
-    def location label
-      raise Error, "Location label not specified.  Usage:  person.location('label_name')" unless label
-      self.get('locations', :label => label)             
-    end
-    
-    def supertags   
-      self.get('super_tags')
-    end
-    
-    def supertag name
-      raise Error, "SuperTag name not specified.  Usage:  person.supertag('tag_name')" unless name
-      self.get('super_tags', :name => name)    
-    end
-    
-    def add_tag tag
-      raise Error, "#{tag} is not a BatchBook::Tag" unless tag.kind_of?(BatchBook::Tag)
-      tag.put(:add_to, :contact_id => id)
-    end
-    
-    def remove_tag tag
-      raise Error, "#{tag} is not a BatchBook::Tag" unless tag.kind_of?(BatchBook::Tag)
-      tag.put(:remove_from, :contact_id => id)
-    end
   end
 
   class Todo < Base
@@ -196,6 +138,10 @@ module BatchBook
   end
 
   class Deal < Base
+    def amount
+      super.gsub(',','')
+    end
+    
     def expected
       case self.status
         when 'lost'
@@ -221,8 +167,64 @@ module BatchBook
   end
 
   class SuperTag < Base
+    def self.tag(name)
+      raise Error, "SuperTag name not specified.  Usage:  BatchBook::SuperTag.tag('tag_name')" unless name
+      self.get(name)  
+    end
   end
 
+  #Locations support
+  [Person, Company].each do |klass|
+    klass.class_eval do        
+      def locations
+        self.get('locations')     
+      end
+      
+      def location label
+        raise Error, "Location label not specified.  Usage:  #{klass.name.downcase}.location('label_name')" unless label
+        self.get('locations', :label => label)             
+      end
+    end   
+  end
+  
+  #Supertag support
+  [Person, Company, Deal].each do |klass|
+    klass.class_eval do 
+      
+      def self.find_all_by_tag(tag, &block)
+        array = []
+        all = self.find(:all)
+        all.each do |one|
+          next if one.supertags.blank?
+          array << one.supertag(tag) unless one.supertag(tag).blank?
+        end
+        if block_given?
+          array.find_all(&block)
+        else
+          array
+        end
+      end
+      
+      def supertags   
+        self.get('super_tags')
+      end
+    
+      def supertag name
+        raise Error, "SuperTag name not specified.  Usage:  #{klass.name.downcase}.supertag('tag_name')" unless name
+        self.get('super_tags', :name => name)    
+      end
+
+      def add_tag tag
+        raise Error, "#{tag} is not a BatchBook::Tag" unless tag.kind_of?(BatchBook::Tag)
+        tag.put(:add_to, :contact_id => id)
+      end
+    
+      def remove_tag tag
+        raise Error, "#{tag} is not a BatchBook::Tag" unless tag.kind_of?(BatchBook::Tag)
+        tag.put(:remove_from, :contact_id => id)
+      end
+   end
+ end
 
 end
 

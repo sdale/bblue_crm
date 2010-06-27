@@ -6,7 +6,7 @@
           #sidebar
             .block
               .filter-box
-                .left-
+                .left-.rmargin
                   %h4 Users
                   - @users.in_groups_of( 2, false ) do |group|
                     .left-.margin
@@ -14,7 +14,7 @@
                         %p
                           = check_box_tag 'filter[users][]', user.name
                           = user.name
-                .right-
+                .left-.rmargin
                   %h4 Status
                   - status_values.in_groups_of( 2, false ) do |group|
                     .left-.margin
@@ -22,13 +22,26 @@
                         %p
                           = check_box_tag 'filter[status][]', num
                           = num
+                .left-
+                  %h4 Date
+                  %br.clear
+                  .left-
+                    From:
+                  .right-
+                    = text_field_tag 'filter[date_from]', {}, :class => 'date-pick', :readonly => 'readonly'
+                  %br.clear
+                  %br.clear
+                  .left-
+                    To:
+                  .right-
+                    = text_field_tag 'filter[date_to]', {}, :class => 'date-pick', :readonly => 'readonly'
                 %br.clear
                 = submit_tag "Filter", :id => 'filter_button'
+        %h3
+          =@deals.size
+          deal(s) total for
+          =@selected_users.join(', ')
         - unless @deals.blank?
-          %h3
-            =@deals.count
-            deal(s) total for
-            =@selected_users.join(', ')
           %table.table
             %tr
               %th Deal Name

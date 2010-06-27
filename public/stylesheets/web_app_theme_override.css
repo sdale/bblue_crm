@@ -4,7 +4,9 @@
 .deal .left-			{ float:left; }
 .deal .right-			{ float:right; }
 .deal .margin 			{ margin:5px;}
-.deal #sidebar			{ float:none;}
+.deal .rmargin			{ margin-right:150px}
+.deal #sidebar			{ float:none; width: 80%}
+.deal #datepicker		{ font-size:62.5%}
 .deal .filter-box 		{
 	background-color:#E5E5E5;
 	font-size:14px;
@@ -14,3 +16,24 @@
 .deal table tr.totals 	{ background-color: lightgrey; font-weight:bold}
 
 .deal .deal_description	{color:gray; margin:2px 0 0 0;}
+
+/* Datepicker */
+a.dp-choose-date {
+	float: left;
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	margin: 2px 3px 0;
+	display: block;
+	text-indent: -2000px;
+	overflow: hidden;
+	background: url(../images/calendar.png) no-repeat; 
+}
+a.dp-choose-date.dp-disabled {
+	background-position: 0 -20px;
+	cursor: default;
+}
+input.dp-applied {
+	width: 140px;
+	float: left;
+}

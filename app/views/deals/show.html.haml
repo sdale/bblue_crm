@@ -7,7 +7,8 @@
   .content
     .inner
       - unless @deal.nil?
-        - @attributes.each do |attr|
+        %h4 General Info
+        - %w{title description deal_with amount status assigned_to}.each do |attr|
           - unless @deal.send(attr).blank?
             %p
               %strong= attr.to_s.titleize
