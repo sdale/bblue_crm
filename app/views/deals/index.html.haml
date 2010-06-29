@@ -72,6 +72,8 @@
               %td{:colspan => 2}= number_to_currency @deals.sum{|deal| deal.expected.to_f}
           .actions-bar.wat-cf
             .actions
+              = link_to "#{image_tag("xls.png", :alt => "Export to XLS")} Export to XLS", deals_path(:params => params, :format => :xls), :class => "button"
+      
         - else
           No deals were found.
       

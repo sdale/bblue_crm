@@ -1,13 +1,13 @@
 class DealsController < ApplicationController
+  include ReportsControllerHelper
 
   before_filter :get_deal, :except => [:index, :new, :create]
-
 
   def index
     @users = User.all
     @selected_users = ['everyone']
     filter = params[:filter]
-    unless filter.blank?
+    unless filter.values.delete_if{|v|v.blank?}.empty?
       @deals = []
       unless filter[:users].blank?
         @selected_users = User.all(:conditions => {:name => filter[:users]}).map{|user|user.email}
@@ -31,6 +31,10 @@ class DealsController < ApplicationController
       @deals.uniq!
     else
       @deals = BatchBook::Deal.find(:all)
+    end
+    respond_to do |format|
+      format.html
+      format.xls{ render_xls( @deals, BatchBook::Deal ) }
     end
   end
 

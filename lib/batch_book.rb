@@ -66,6 +66,10 @@ module BatchBook
       super
     end
     
+    def self.clean_name
+      self.name.to_s.gsub("BatchBook::","")
+    end
+    
     def attributes=(data)
       data.each do |key, value|
         self.send(key+'=', value)
@@ -167,10 +171,6 @@ module BatchBook
   end
 
   class SuperTag < Base
-    def self.tag(name)
-      raise Error, "SuperTag name not specified.  Usage:  BatchBook::SuperTag.tag('tag_name')" unless name
-      self.get(name)  
-    end
   end
 
   #Locations support
@@ -190,7 +190,6 @@ module BatchBook
   #Supertag support
   [Person, Company, Deal].each do |klass|
     klass.class_eval do 
-      
       def self.find_all_by_tag(tag, &block)
         array = []
         all = self.find(:all)
