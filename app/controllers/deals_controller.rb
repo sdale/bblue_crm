@@ -7,7 +7,7 @@ class DealsController < ApplicationController
     @users = User.all
     @selected_users = ['everyone']
     filter = params[:filter]
-    unless filter.values.delete_if{|v|v.blank?}.empty?
+    unless filter.blank? || filter.values.delete_if{|v|v.blank?}.empty?
       @deals = []
       unless filter[:users].blank?
         @selected_users = User.all(:conditions => {:name => filter[:users]}).map{|user|user.email}

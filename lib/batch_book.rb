@@ -142,6 +142,10 @@ module BatchBook
   end
 
   class Deal < Base
+    def name
+      self.title
+    end
+    
     def amount
       super.gsub(',','')
     end
@@ -181,7 +185,7 @@ module BatchBook
       end
       
       def location label
-        raise Error, "Location label not specified.  Usage:  #{klass.name.downcase}.location('label_name')" unless label
+        raise Error, "Location label not specified.  Usage:  #{klass.clean_name.downcase}.location('label_name')" unless label
         self.get('locations', :label => label)             
       end
     end   
@@ -209,7 +213,7 @@ module BatchBook
       end
     
       def supertag name
-        raise Error, "SuperTag name not specified.  Usage:  #{klass.name.downcase}.supertag('tag_name')" unless name
+        raise Error, "SuperTag name not specified.  Usage:  #{klass.clean_name.downcase}.supertag('tag_name')" unless name
         self.get('super_tags', :name => name)    
       end
 
