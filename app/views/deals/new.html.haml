@@ -1,10 +1,10 @@
 .block
   .secondary-navigation
     %ul.wat-cf
-      %li.first= link_to "#{t("web-app-theme.list", :default => "List")}", deals_path
+      %li.first= link_to "List", deals_path
       %li.active= link_to "New Deal", new_deal_path
   .content
-    %h2.title= "#{t("web-app-theme.new", :default => "New")} Deal"
+    %h2.title= "New Deal"
     .inner
       - form_for :deal, :url => deals_path, :html => { :class => :form } do |f|
         .group

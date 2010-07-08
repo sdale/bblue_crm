@@ -1,11 +1,11 @@
 .block
   .secondary-navigation
     %ul.wat-cf
-      %li.first= link_to "#{t("web-app-theme.list", :default => "List")}", contacts_path
+      %li.first= link_to "List", contacts_path
       %li{:class => "#{@type == 'person'? 'active' : ''}"}= link_to "New Person", url_for(:action => :new, :type => 'person')
       %li{:class => "#{@type == 'company'? 'active' : ''}"}= link_to "New Company", url_for(:action => :new, :type => 'company')
   .content
-    %h2.title= "#{t("web-app-theme.new", :default => "New")} #{@type.titleize}"
+    %h2.title= "New #{@type.titleize}"
     .inner
       - form_for :contact, :url => contacts_path, :html => { :class => :form } do |f|
         = render :partial => "form_#{@type}", :locals => {:f => f}

@@ -4,7 +4,6 @@ nbproject
 *.tmp
 *~
 *.pid
-public/system
 tmp/*
-coverage/*
-rerun.txt
+config/crm_data.yml
+

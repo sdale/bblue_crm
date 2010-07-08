@@ -1,19 +1,20 @@
-# Filters added to this controller apply to all controllers in the application.
-# Likewise, all the methods added will be available for all controllers.
-
 class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   #before_filter :login_required, :except => [:users]
-  helper :all # include all helpers, all the time
-  protect_from_forgery # See ActionController::RequestForgeryProtection for details
-  if Rails.env == 'development'
-    BatchBook.account = 'ucdev'
-    BatchBook.token = 'IzYgSsNtaB'
-    BatchBook.per_page = 1000000
-  else
-    BatchBook.account = 'uc'
-    BatchBook.token = 'qhlCOlJYht'
-    BatchBook.per_page = 1000000
+  helper :all
+  protect_from_forgery 
+  BatchBook::boot File.join(Rails.root, 'config', 'crm_data.yml')
+  
+  def paginate( model )
+    load_page
+    model.paginate(@page, @per_page)
   end
 
+  def load_page
+    @page = params[:page].to_i == 0 ? 1 : params[:page].to_i
+    @per_page = params[:per_page].to_i || 10
+    if @per_page < 1 || @per_page > 10
+      @per_page = 10
+    end
+  end
 end

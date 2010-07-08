@@ -1,11 +1,11 @@
 .block
   .secondary-navigation
     %ul.wat-cf
-      %li.first.active= link_to "#{t("web-app-theme.list", :default => "Browse all")}", contacts_path
-      %li= link_to "New Person", url_for(:action => :new, :type => 'person')
-      %li= link_to "New Company", url_for(:action => :new, :type => 'company')
+      %li.first.active= link_to "Browse all", contacts_path
+      %li= link_to "New Person", new_contact_path(:type => 'person')
+      %li= link_to "New Company", new_contact_path(:type => 'company')
   .content
-    %h2.title= "#{t("web-app-theme.all", :default => "All")} Contacts" 
+    %h2.title All Contacts 
     .inner
       - unless @contacts.blank?
         %table.table
@@ -22,10 +22,11 @@
               %td= contact.type.titleize
               %td= contact.created_at.to_time.strftime("%a, %d %b %Y %H:%M:%S")
               %td.last
-                = link_to "#{t("web-app-theme.show", :default => "Show")}", contact_path(contact)
-                = link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_contact_path(contact)
-                = link_to "#{t("web-app-theme.delete", :default => "Delete")}", contact_path(contact), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
+                = link_to "Show", contact_path(contact)
+                = link_to "Edit", edit_contact_path(contact)
+                = link_to "Delete", contact_path(contact), :method => :delete, :confirm => "Are you sure?"
         .actions-bar.wat-cf
           .actions
+            = paginate_resource(:total => @contacts.size/2) 
       - else
         There are no contacts available.

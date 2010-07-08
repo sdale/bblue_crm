@@ -15,15 +15,15 @@
 
 .group
   = f.label :assigned_to, "Assigned To", :class => :label
-  = f.select :assigned_to, people_for_select
+  = f.select :assigned_to, users_for_select
 
 .group
   = f.label :assigned_by,  "Assigned By", :class => :label
-  = f.select :assigned_by, people_for_select
+  = f.select :assigned_by, users_for_select
 
         
 .group.navform.wat-cf
   %button.button{:type => 'submit'}
-    =image_tag("web-app-theme/tick.png", :alt => "#{t("web-app-theme.save", :default => "Save")}")
-    =t("web-app-theme.save", :default => "Save")
-  = link_to "#{image_tag("web-app-theme/cross.png", :alt => "#{t("web-app-theme.cancel", :default => "Cancel")}")} #{t("web-app-theme.cancel", :default => "Cancel")}", tasks_path, :class => "button"
+    =image_tag("web-app-theme/tick.png", :alt => "Save")
+    ="Save"
+  = link_to "#{image_tag("web-app-theme/cross.png", :alt => "Cancel")}" "Cancel", tasks_path, :class => "button"

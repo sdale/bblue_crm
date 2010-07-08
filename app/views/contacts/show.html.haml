@@ -1,10 +1,10 @@
 .block
   .secondary-navigation
     %ul.wat-cf
-      %li.first= link_to "#{t("web-app-theme.list", :default => "List")}", contacts_path
+      %li.first= link_to "List", contacts_path
       %li= link_to "New Person", url_for(:action => :new, :type => 'person')
       %li= link_to "New Company", url_for(:action => :new, :type => 'company')
-      %li.active= link_to "#{t("web-app-theme.show", :default => "Show")}", contact_path
+      %li.active= link_to "Show", contact_path
   .content
     .inner
       - unless @contact.nil?
@@ -22,7 +22,7 @@
                 %strong= key.titleize
                 = value
         .wat-cf
-          = link_to "#{image_tag("web-app-theme/application_edit.png", :alt => "#{t("web-app-theme.edit", :default=> "Edit")}")} #{t("web-app-theme.edit", :default=> "Edit")}", edit_contact_path(@contact), :class => "button"
-          = link_to "#{image_tag("web-app-theme/cross.png", :alt => "#{t("web-app-theme.delete", :default=> "Delete")}")} #{t("web-app-theme.delete", :default => "Delete")}", contact_path(@contact), :method => "delete", :class => "button", :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
+          = link_to "#{image_tag("web-app-theme/application_edit.png", :alt => "Edit")}" "Edit", edit_contact_path(@contact), :class => "button"
+          = link_to "#{image_tag("web-app-theme/cross.png", :alt => "Delete")}" "Delete", contact_path(@contact), :method => "delete", :class => "button", :confirm => "Are you sure?"
       - else
         %h1 This user or company doesn't exist!

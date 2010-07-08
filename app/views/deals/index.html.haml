@@ -63,9 +63,9 @@
                 %td= deal.status
                 %td= number_to_currency deal.expected
                 %td.last
-                  =# link_to "#{t("web-app-theme.show", :default => "Show")}", deal_path(deal)
-                  =# link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_deal_path(deal)
-                  =# link_to "#{t("web-app-theme.delete", :default => "Delete")}", deal_path(deal), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
+                  =# link_to "Show", deal_path(deal)
+                  =# link_to "Edit", edit_deal_path(deal)
+                  =# link_to "Delete", deal_path(deal), :method => :delete, :confirm => "Are you sure?"
             %tr.totals
               %td{:colspan => 3} Total   
               %td{:colspan => 2}= number_to_currency @deals.sum{|deal| deal.amount.to_f}
@@ -73,7 +73,9 @@
           .actions-bar.wat-cf
             .actions
               = link_to "#{image_tag("xls.png", :alt => "Export to XLS")} Export to XLS", deals_path(:params => params, :format => :xls), :class => "button"
-      
+              %br.clear
+              %br.clear
+              = paginate_resource
         - else
           No deals were found.
       

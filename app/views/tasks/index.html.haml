@@ -1,10 +1,10 @@
 .block
   .secondary-navigation
     %ul.wat-cf
-      %li.first.active= link_to "#{t("web-app-theme.list", :default => "List")}", tasks_path
+      %li.first.active= link_to "List", tasks_path
       %li= link_to "New Task", new_task_path
   .content
-    %h2.title= "#{t("web-app-theme.all", :default => "All")} Tasks"
+    %h2.title= "All Tasks"
     .inner
       - unless @tasks.blank?
         %table.table
@@ -19,9 +19,9 @@
               %td= link_to task.title, task_path(task)
               %td= task.due_date.to_time.strftime("%a, %d %b %Y %H:%M:%S")
               %td.last
-                = link_to "#{t("web-app-theme.show", :default => "Show")}", task_path(task)
-                = link_to "#{t("web-app-theme.edit", :default => "Edit")}", edit_task_path(task)
-                = link_to "#{t("web-app-theme.delete", :default => "Delete")}", task_path(task), :method => :delete, :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
+                = link_to "Show", task_path(task)
+                = link_to "Edit", edit_task_path(task)
+                = link_to "Delete", task_path(task), :method => :delete, :confirm => "Are you sure?"
         .actions-bar.wat-cf
           .actions
       - else

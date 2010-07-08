@@ -3,7 +3,7 @@ class ContactsController < ApplicationController
   before_filter :get_contact, :except => [:index, :new]
 
   def index
-    @contacts = BatchBook::Person.find(:all) | BatchBook::Company.find(:all)
+    @contacts = paginate(BatchBook::Person) | paginate(BatchBook::Company)
     @contacts.sort! { |x, y| x.attributes['id'] <=> y.attributes['id']  }
   end
 

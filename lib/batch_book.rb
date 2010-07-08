@@ -9,13 +9,14 @@ require 'active_resource'
 # BatchBook.account = 'demo'
 # BatchBook.token = 'XYZ'
 #
-#
+# Edited by Pedro Mateus Tavares | pedromateustavares@gmail.com | http://pedromtavares.wordpress.com
+
 module BatchBook
   VERSION = '1.0.2'
   
   class Error < StandardError; end
   class << self
-    attr_accessor :host_format, :site_format, :domain_format, :protocol, :path
+    attr_accessor :host_format, :site_format, :domain_format, :protocol, :path, :ra_feed_url
     attr_reader :account, :token
  
     # Sets the account name, and updates all the resources with the new domain.
@@ -34,21 +35,25 @@ module BatchBook
       @token = value
     end
 
-    def per_page=(value)
+    def per_request=(value)
       resources.each do |r|
-        r.per_page = value
-      end
-    end
-
-    def offset=(value)
-      resources.each do |r|
-        r.offset = value
+        r.per_request = value
       end
     end
  
     def resources
       @resources ||= []
     end
+    
+    def boot(path)
+      data = YAML::load_file path
+      settings = data[Rails.env]
+      self.account = settings['account']
+      self.token = settings['token']
+      self.per_request = settings['per_request']
+      self.ra_feed_url = settings['ra_feed_url']
+    end
+    
   end
   
   self.host_format = '%s://%s/%s/'
@@ -60,7 +65,7 @@ module BatchBook
     def self.inherited(base)
       BatchBook.resources << base
       class << base
-        attr_accessor :site_format, :per_page, :offset
+        attr_accessor :site_format, :per_request
       end
       base.site_format = '%s'      
       super
@@ -77,23 +82,43 @@ module BatchBook
     end
 
     def self.find(*args)
-      options = args.extract_options!
-      params = options[:params] || {}
-      params = params.merge(:limit => self.per_page)
-      params = params.merge(:offset => self.offset) unless self.offset.blank?
-      options = options.merge(:params => params)
-      args << options
-      super(*args)
+      return super(*args) if self.clean_name == 'Todo' #quickfix until BB implements offset and limit params on todos API
+      if args.first == :all
+        total, counter = [], 0
+        while true
+          options = args.extract_options!
+          return super(*args << options) if options[:skip]
+          params = options[:params] || {}
+          params = params.merge(:limit => self.per_request)
+          params = params.merge(:offset => self.per_request * counter)
+          options = options.merge(:params => params)
+          args << options
+          temp = super(*args)
+          if temp.blank?
+            break
+          else
+            total << temp
+            counter+=1
+          end
+        end
+        total.flatten!
+      else
+        super(*args)
+      end
+    end
+    
+    def self.paginate(page, per_page=10)
+      self.find(:all, :params => {:limit => per_page, :offset => (page * per_page) - per_page }, :skip => true)
     end
     
     def self.find_all_by_param(name, params)
       array = []
-      params.each{|param|array += self.find(:all, :params => {name => param})}
+      params.each{|param|array += self.find(:all, :params => {name => param}, :skip => true)}
       array
     end
     
   end
-  
+  #Resources
   class Person < Base
     def type
       'person'
@@ -105,14 +130,10 @@ module BatchBook
       else
         ''
       end
-    end
-    
-    def tags
-      Tag.find(:all, :params => {:contact_id => id})
-    end   
+    end 
 
     protected
-
+    #Currently unsupported by the API
     def validate
       errors.add("first_name", "can't be blank.") if self.first_name.blank?
       errors.add("last_name", "can't be blank.") if self.last_name.blank?
@@ -122,23 +143,7 @@ module BatchBook
   class Company < Base  
     def type
       'company'
-    end
-
-    def tags
-      Tag.find(:all, :params => {:contact_id => id})
-    end          
-  end
-
-  class Todo < Base
-    def tags
-      Tag.find(:all, :params => {:todo_id => id})
-    end
-  end
-
-  class Communication < Base
-    def tags
-      Tag.find(:all, :params => {:communication_id => id})
-    end    
+    end        
   end
 
   class Deal < Base
@@ -150,6 +155,7 @@ module BatchBook
       super.gsub(',','')
     end
     
+    #Specific method for my company
     def expected
       case self.status
         when 'lost'
@@ -166,6 +172,13 @@ module BatchBook
           self.amount
       end
     end
+    
+  end
+  
+  class Todo < Base
+  end
+
+  class Communication < Base
   end
 
   class Tag < Base
@@ -177,7 +190,23 @@ module BatchBook
   class SuperTag < Base
   end
 
-  #Locations support
+  #Tag support(Person, Company, Deal, Communication and Todo)
+  [Person, Company].each do |klass|
+    klass.class_eval do
+      def tags
+        Tag.find(:all, :params => {:contact_id => self.id})
+      end  
+    end
+  end
+  [Deal, Communication, Todo].each do |klass|
+    klass.class_eval %Q!
+      def tags
+        Tag.find(:all, :params => {#{klass.name.downcase.to_sym}_id => self.id})
+      end
+    !
+  end
+  
+  #Locations support(Person and Company)
   [Person, Company].each do |klass|
     klass.class_eval do        
       def locations
@@ -191,15 +220,17 @@ module BatchBook
     end   
   end
   
-  #Supertag support
+  #Supertag support(Person, Company, Deal)
   [Person, Company, Deal].each do |klass|
     klass.class_eval do 
-      def self.find_all_by_tag(tag, &block)
+      def self.find_all_by_supertag(supertag, &block)
         array = []
         all = self.find(:all)
         all.each do |one|
-          next if one.supertags.blank?
-          array << one.supertag(tag) unless one.supertag(tag).blank?
+          supertags = one.supertags
+          next if supertags.blank?
+          temp = supertags.find{|e| e['name'] == supertag}
+          array << one unless temp.blank? || temp['fields'].blank?
         end
         if block_given?
           array.find_all(&block)

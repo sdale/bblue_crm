@@ -3,10 +3,12 @@ task :log_activities => :environment do
   require 'open-uri'
   require 'openssl'
   
+  BatchBook::boot File.join(Rails.root, 'config', 'crm_data.yml')
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+  
   page = 1
   while true
-    rss = SimpleRSS.parse open(ENV['feed_url']+"?page=#{page}")
+    rss = SimpleRSS.parse open(BatchBook.ra_feed_url+"?page=#{page}")
     page+=1
     unless rss.items.blank?
       rss.items.each do |item|

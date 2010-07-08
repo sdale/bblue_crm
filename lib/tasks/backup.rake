@@ -1,6 +1,6 @@
 desc 'Backup CRM data'
 task :backup => :environment do
-  BatchBook.account, BatchBook.token, BatchBook.per_page = ENV['account'], ENV['token'], 1000000
+  BatchBook::boot File.join(Rails.root, 'config', 'crm_data.yml')
   root_path = "#{Rails.root}/tmp/backup"
   now = Time.now
   path = File.join( root_path, now.year.to_s, now.month.to_s, now.day.to_s )

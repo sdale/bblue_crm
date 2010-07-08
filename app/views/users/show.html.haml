@@ -1,22 +1,22 @@
 .block
   .secondary-navigation
     %ul.wat-cf
-      %li.first= link_to "#{t("web-app-theme.list", :default => "List")}", users_path
-      %li= link_to "#{t("web-app-theme.new", :default => "New")}", new_user_path
-      %li.active= link_to "#{t("web-app-theme.show", :default => "Show")}", user_path
+      %li.first= link_to "List", users_path
+      %li= link_to "New", new_user_path
+      %li.active= link_to "Show", user_path
   .content
     .inner
       %p
-        %strong= "#{t("activerecord.attributes.user.login", :default => t("activerecord.labels.login", :default => "Login"))} :"
+        %strong Login:
         =@user.login
 
       %p
-        %strong= "#{t("activerecord.attributes.user.name", :default => t("activerecord.labels.name", :default => "Name"))} :"
+        %strong Name:
         =@user.name
 
       %p
-        %strong= "#{t("activerecord.attributes.user.email", :default => t("activerecord.labels.email", :default => "Email"))} :"
+        %strong Email:
         =@user.email
       .wat-cf
-        = link_to "#{image_tag("web-app-theme/application_edit.png", :alt => "#{t("web-app-theme.edit", :default=> "Edit")}")} #{t("web-app-theme.edit", :default=> "Edit")}", edit_user_path(@user), :class => "button"
-        = link_to "#{image_tag("web-app-theme/cross.png", :alt => "#{t("web-app-theme.delete", :default=> "Delete")}")} #{t("web-app-theme.delete", :default => "Delete")}", user_path(@user), :method => "delete", :class => "button", :confirm => "#{t("web-app-theme.confirm", :default => "Are you sure?")}"
+        = link_to "#{image_tag("web-app-theme/application_edit.png", :alt => "Edit")} Edit", edit_user_path(@user), :class => "button"
+        = link_to "#{image_tag("web-app-theme/cross.png", :alt => "Delete")} Delete", user_path(@user), :method => "delete", :class => "button", :confirm => "Are you sure?"

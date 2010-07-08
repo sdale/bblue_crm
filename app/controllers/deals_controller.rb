@@ -19,18 +19,18 @@ class DealsController < ApplicationController
         @deals += BatchBook::Deal.find_all_by_param(:status, @status)
       end
       unless filter[:date_from].blank?
-        @deals += BatchBook::Deal.find_all_by_tag('dealinfo') do |tag|
+        @deals += BatchBook::Deal.find_all_by_supertag('dealinfo') do |tag|
           tag.first['fields']['close_date'].to_date >= filter[:date_from].to_date
         end
       end
       unless filter[:date_to].blank?
-        @deals += BatchBook::Deal.find_all_by_tag('dealinfo') do |tag|
+        @deals += BatchBook::Deal.find_all_by_supertag('dealinfo') do |tag|
           tag.first['fields']['close_date'].to_date <= filter[:date_to].to_date
         end
       end
       @deals.uniq!
     else
-      @deals = BatchBook::Deal.find(:all)
+      @deals = paginate BatchBook::Deal
     end
     respond_to do |format|
       format.html
