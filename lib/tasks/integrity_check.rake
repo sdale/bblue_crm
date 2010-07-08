@@ -7,11 +7,11 @@ task :integrity_check => :environment do
   deals = IntegrityCheck.new :deals, root_path
   contacts = IntegrityCheck.new :contacts, root_path
   
-  #[deals, contacts].each{|var| var.check_tags }
+  [deals, contacts].each{|var| var.check_tags }
   
   contacts.check_supertags
   
-  #deals.check_todos
+  deals.check_todos
   [deals, contacts].each{|var| var.generate_report }
   
 end
