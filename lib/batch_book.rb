@@ -1,6 +1,13 @@
 require 'rubygems'
 require 'active_resource'
 
+dirname = File.join(File.dirname( __FILE__ ), 'batch_book')
+Dir.entries( dirname ).each do |f|
+  if f =~ /\.rb$/
+    require( File.join(dirname, f) )
+  end
+end
+
 # Ruby lib for working with the BatchBook's API's XML interface. Set the account
 # name and authentication token, using the BatchBook API Key found in your 
 # account settings, and you're ready to roll.
@@ -101,7 +108,7 @@ module BatchBook
             counter+=1
           end
         end
-        total.flatten!
+        total.flatten
       else
         super(*args)
       end
@@ -118,8 +125,10 @@ module BatchBook
     end
     
   end
-  #Resources
+  
   class Person < Base
+    include TagSupport, LocationSupport, SuperTagSupport
+
     def type
       'person'
     end
@@ -131,6 +140,12 @@ module BatchBook
         ''
       end
     end 
+    
+    #Add_location only supported on Person, check bottom of the file for a list of params.
+    def add_location(params = {})
+      params.update(:label => 'home') unless params[:label].present?
+      self.post(:locations, :location => params)
+    end
 
     protected
     #Currently unsupported by the API
@@ -141,12 +156,16 @@ module BatchBook
   end
 
   class Company < Base  
+    include TagSupport, LocationSupport, SuperTagSupport
+    
     def type
       'company'
     end        
   end
 
   class Deal < Base
+    include TagSupport#, SuperTagSupport
+    
     def name
       self.title
     end
@@ -176,9 +195,11 @@ module BatchBook
   end
   
   class Todo < Base
+    include TagSupport
   end
 
   class Communication < Base
+    include TagSupport
   end
 
   class Tag < Base
@@ -190,92 +211,21 @@ module BatchBook
   class SuperTag < Base
   end
 
-  #Tag support(Person, Company, Deal, Communication and Todo)
-  [Person, Company].each do |klass|
-    klass.class_eval do
-      def tags
-        Tag.find(:all, :params => {:contact_id => self.id})
-      end  
-    end
-  end
-  [Deal, Communication, Todo].each do |klass|
-    klass.class_eval %Q!
-      def tags
-        Tag.find(:all, :params => {#{klass.name.downcase.to_sym}_id => self.id})
-      end
-    !
-  end
-  
-  #Locations support(Person and Company)
-  [Person, Company].each do |klass|
-    klass.class_eval do        
-      def locations
-        self.get('locations')     
-      end
-      
-      def location label
-        raise Error, "Location label not specified.  Usage:  #{klass.clean_name.downcase}.location('label_name')" unless label
-        self.get('locations', :label => label)             
-      end
-    end   
-  end
-  
-  #Supertag support(Person, Company, Deal)
-  [Person, Company, Deal].each do |klass|
-    klass.class_eval do 
-      def self.find_all_by_supertag(supertag, &block)
-        array = []
-        all = self.find(:all)
-        all.each do |one|
-          supertags = one.supertags
-          next if supertags.blank?
-          temp = supertags.find{|e| e['name'] == supertag}
-          array << one unless temp.blank? || temp['fields'].blank?
-        end
-        if block_given?
-          array.find_all(&block)
-        else
-          array
-        end
-      end
-      
-      def supertags   
-        self.get('super_tags')
-      end
-    
-      def supertag name
-        raise Error, "SuperTag name not specified.  Usage:  #{klass.clean_name.downcase}.supertag('tag_name')" unless name
-        self.get('super_tags', :name => name)    
-      end
-
-      def add_tag tag
-        raise Error, "#{tag} is not a BatchBook::Tag" unless tag.kind_of?(BatchBook::Tag)
-        tag.put(:add_to, :contact_id => id)
-      end
-    
-      def remove_tag tag
-        raise Error, "#{tag} is not a BatchBook::Tag" unless tag.kind_of?(BatchBook::Tag)
-        tag.put(:remove_from, :contact_id => id)
-      end
-   end
- end
-
 end
 
 
-
-__END__
-
-require 'batchbook'
-BatchBook.account = 'devo'
-BatchBook.token = 'xyZ'
-
-search_by_name = BatchBook::Person.find(:all, :params => {:name => 'will'} )
-search_by_email = BatchBook::Person.find(:all, :params => {:email => will@batchblue.com})
-
-person = BatchBook::Person.find 1937
-person.last_name = 'new last name'
-person.save
-
-new_person = BatchBook::Person.new :first_name => 'will', :last_name => 'larson', :title => 'dev'
-new_person.save
+# Add a Location to a Person
+# POST https://test.batchbook.com/service/people/#{id}/locations.xml
+# Field Description
+# location[label]   Location Name ('work', 'home', etc.) - REQUIRED
+# location[email]   Email Address
+# location[website]   Website URL
+# location[phone]   Phone Number
+# location[cell]  Cell Phone Number
+# location[fax]   Fax Number
+# location[street_1]  Street Address
+# location[street_2]  Street Address 2
+# location[city]  City
+# location[state]   State
+# location[postal_code]   Postal Code
+# location[country]   Country

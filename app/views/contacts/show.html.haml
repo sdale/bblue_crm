@@ -21,6 +21,9 @@
               %p
                 %strong= key.titleize
                 = value
+        = link_to "Convert lead to customer", convert_contact_path(@contact)
+        %br.clear
+        %br.clear
         .wat-cf
           = link_to "#{image_tag("web-app-theme/application_edit.png", :alt => "Edit")}" "Edit", edit_contact_path(@contact), :class => "button"
           = link_to "#{image_tag("web-app-theme/cross.png", :alt => "Delete")}" "Delete", contact_path(@contact), :method => "delete", :class => "button", :confirm => "Are you sure?"

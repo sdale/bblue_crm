@@ -5,7 +5,7 @@ module ApplicationHelper
     User.all.map{|u| [u.name]}.insert(0, ['Select a user', ''])
   end
 
-  ['person', 'companies'].each do |type|
+  ['people', 'companies'].each do |type|
     self.module_eval %Q!
       def #{type.pluralize}_for_select
         BatchBook::#{type.singularize.capitalize}.find(:all).map{ |p| [p.name]}.insert(0, ['Select a #{type.singularize}', ''])

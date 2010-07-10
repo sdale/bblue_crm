@@ -49,6 +49,17 @@ class ContactsController < ApplicationController
       render :edit
     end
   end
+  
+  def convert
+    begin
+      @contact.remove_tag 'lead'
+      @contact.add_tag 'customer'
+      flash[:notice] = "Contact #{@contact.name} was successfully converted from lead to customer!!"
+    rescue
+      flash[:error] = "Unable to convert the contact #{@contact.name}"
+    end
+    redirect_to :action => :index
+  end
 
   def destroy
     @contact.destroy
