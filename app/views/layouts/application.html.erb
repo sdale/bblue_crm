@@ -3,7 +3,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>BatchBlue Integration</title>
-	<%= stylesheet_link_tag "web_app_theme", "web_app_theme_override", "themes/djime-cerulean/style", :cache => true %>
+	<%= stylesheet_link_tag "web_app_theme", "web_app_theme_override", "themes/djime-cerulean/style", 'datePicker', :cache => true %>
+	<%= javascript_include_tag :defaults, "jquery",'date','jquery.datePicker', :cache => true %>
 </head>
 <body>
   <div id="container">
