@@ -3,8 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>BatchBlue Integration</title>
-	<%= stylesheet_link_tag "web_app_theme", "web_app_theme_override", "themes/default/style",'datePicker', :cache => true %>
-        <%= javascript_include_tag :defaults, "jquery",'date','jquery.datePicker', :cache => true %>
+	<%= stylesheet_link_tag "web_app_theme", "web_app_theme_override", "themes/djime-cerulean/style", :cache => true %>
 </head>
 <body>
   <div id="container">
@@ -22,10 +21,15 @@
       </div>      
       <div id="main-navigation">
         <ul class="wat-cf">
-          <li><%=link_to "Contacts", contacts_path%></li>
-          <li><%=link_to "Deals", deals_path%></li>
-		  <li><%=link_to "Tasks", tasks_path%></li>
-		  <li><%=link_to "Users", users_path%></li>
+        	<% %w{contacts deals users}.each do |type|%>
+				<% if controller_name == type%>
+					<li class="active">
+				<% else %>
+					<li>
+				<% end %>
+				<%=link_to type.titleize, url_for(:controller => type)%>
+				</li>
+			<%end%>
         </ul>
       </div>
     </div>    

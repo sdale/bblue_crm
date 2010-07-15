@@ -1,17 +1,19 @@
-.block
-  .content
-    %h2.title Login
-    .inner
-      - form_tag login_users_path, :method => :post, :class => 'form' do       
-        .group
-          = label_tag :login, "Login",:class => 'label'
-          = text_field_tag :login, {}, :class => 'text_field'
+#box
+  %h1 BatchBlue Integration
+  .block#block-login
+    %h2 Login
+    .content.login
+      - form_tag login_users_path, :method => :post, :class => 'form login' do       
+        .group.wat-cf
+          .left= label_tag :login, "Login",:class => 'label right'
+          .right= text_field_tag :login, {}, :class => 'text_field'
         
-        .group
-          = label_tag :password, "Password",:class => 'label'
-          = password_field_tag :password, {}, :class => 'text_field'
+        .group.wat-cf
+          .left= label_tag :password, "Password",:class => 'label right'
+          .right= password_field_tag :password, {}, :class => 'text_field'
                 
         .group.navform.wat-cf
-          %button.button{:type => 'submit'}
-            = image_tag("web-app-theme/tick.png", :alt => "Save") 
-            Login        
+          .right
+            %button.button{:type => 'submit'}
+              = image_tag("web-app-theme/key.png", :alt => "Login") 
+              Login        

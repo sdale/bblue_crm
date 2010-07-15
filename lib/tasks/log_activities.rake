@@ -3,7 +3,7 @@ task :log_activities => :environment do
   require 'open-uri'
   require 'openssl'
   
-  BatchBook::boot File.join(Rails.root, 'config', 'crm_data.yml')
+  BatchBook::boot
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
   
   page = 1

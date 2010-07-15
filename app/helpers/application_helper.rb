@@ -8,13 +8,13 @@ module ApplicationHelper
   ['people', 'companies'].each do |type|
     self.module_eval %Q!
       def #{type.pluralize}_for_select
-        BatchBook::#{type.singularize.capitalize}.find(:all).map{ |p| [p.name]}.insert(0, ['Select a #{type.singularize}', ''])
+        BatchBook::#{type.singularize.capitalize}.cached.map{ |p| [p.name]}.insert(0, ['Select a #{type.singularize}', ''])
       end
     !  
   end
   
   def contacts_for_select
-    contacts = BatchBook::Person.find(:all) | BatchBook::Company.find(:all)
+    contacts = BatchBook::Person.cached | BatchBook::Company.cached
     contacts.sort! { |x, y| x.attributes['id'] <=> y.attributes['id']  }
     contacts.map{ |c| [c.name]}.insert(0, ['Select a contact','' ])
   end

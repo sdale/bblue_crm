@@ -1,7 +1,6 @@
 
 class UsersController < ApplicationController
   
-  #before_filter :login_required, :except => [:login]
   before_filter :get_user, :only => [:show, :edit, :update, :destroy]
   
   def index

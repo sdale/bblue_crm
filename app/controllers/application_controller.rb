@@ -1,9 +1,9 @@
 class ApplicationController < ActionController::Base
   include AuthenticatedSystem
-  #before_filter :login_required, :except => [:users]
+  before_filter :login_required, :except => [:login]
   helper :all
   protect_from_forgery 
-  BatchBook::boot File.join(Rails.root, 'config', 'crm_data.yml')
+  BatchBook::boot
   
   def paginate( model )
     load_page

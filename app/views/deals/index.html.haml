@@ -50,22 +50,20 @@
               %th Amount
               %th Status
               %th Expected
-              %th.last &nbsp;
             - @deals.each do |deal|
               %tr{:class => cycle("odd","even")}
                 %td
                   = link_to deal.title, deal_path(deal)
                   .deal_description
                     = deal.description
-                %td= deal.deal_with
+                %td= deal_with(deal, @people)
                 %td= deal.assigned_to
                 %td= number_to_currency deal.amount
                 %td= deal.status
                 %td= number_to_currency deal.expected
-                %td.last
-                  =# link_to "Show", deal_path(deal)
-                  =# link_to "Edit", edit_deal_path(deal)
-                  =# link_to "Delete", deal_path(deal), :method => :delete, :confirm => "Are you sure?"
+                =# link_to "Show", deal_path(deal)
+                =# link_to "Edit", edit_deal_path(deal)
+                =# link_to "Delete", deal_path(deal), :method => :delete, :confirm => "Are you sure?"
             %tr.totals
               %td{:colspan => 3} Total   
               %td{:colspan => 2}= number_to_currency @deals.sum{|deal| deal.amount.to_f}

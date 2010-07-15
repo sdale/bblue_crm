@@ -52,7 +52,7 @@ module BatchBook
       @resources ||= []
     end
     
-    def boot(path)
+    def boot(path = File.join(Rails.root, 'config', 'crm_data.yml'))
       data = YAML::load_file path
       settings = data[Rails.env]
       self.account = settings['account']
@@ -69,6 +69,7 @@ module BatchBook
   self.protocol = 'https'
  
   class Base < ActiveResource::Base
+    extend CachingSupport
     def self.inherited(base)
       BatchBook.resources << base
       class << base
@@ -115,12 +116,16 @@ module BatchBook
     end
     
     def self.paginate(page, per_page=10)
-      self.find(:all, :params => {:limit => per_page, :offset => (page * per_page) - per_page }, :skip => true)
+      self.find(:all, :params => {:limit => per_page, :offset => (page * per_page) - per_page }, :skip => true) 
     end
     
-    def self.find_all_by_param(name, params)
+    def self.find_all_by_param(name, params, cached = true)
       array = []
-      params.each{|param|array += self.find(:all, :params => {name => param}, :skip => true)}
+      if cached
+        params.each{|param|array += self.cached('eager').find_all{|obj|obj.send(name) == param}}
+      else
+        params.each{|param|array += self.find(:all, :params => {name => param}, :skip => true)}
+      end
       array
     end
     
@@ -141,17 +146,17 @@ module BatchBook
       end
     end 
     
-    #Add_location only supported on Person, check bottom of the file for a list of params.
+    #add_location only supported on Person, check bottom of the file for a list of params.
     def add_location(params = {})
       params.update(:label => 'home') unless params[:label].present?
       self.post(:locations, :location => params)
     end
 
     protected
-    #Currently unsupported by the API
+    
     def validate
-      errors.add("first_name", "can't be blank.") if self.first_name.blank?
-      errors.add("last_name", "can't be blank.") if self.last_name.blank?
+      errors.add("First Name", "can't be blank.") if self.first_name.blank?
+      errors.add("Last Name", "can't be blank.") if self.last_name.blank?
     end
   end
 
@@ -160,7 +165,7 @@ module BatchBook
     
     def type
       'company'
-    end        
+    end    
   end
 
   class Deal < Base

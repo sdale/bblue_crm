@@ -1,6 +1,6 @@
 class IntegrityCheck
   
-  BatchBook::boot File.join(Rails.root, 'config', 'crm_data.yml')
+  BatchBook::boot
  
   TAGS_REQUIRED = {:contacts => ['lead', 'customer'], 
                    :deals => ['dealinfo']

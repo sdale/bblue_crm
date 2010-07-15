@@ -15,7 +15,7 @@ module TagSupport
   
   module InstanceMethods  
     def tags
-      Tag.find(:all, :params => {@param => self.id})
+      BatchBook::Tag.find(:all, :params => {@param => self.id})
     end  
     def add_tag(name)
       raise Error, "Tag name not specified.  Usage:  obj.add_tag('tag_name')" unless name

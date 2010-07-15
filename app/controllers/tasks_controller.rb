@@ -4,7 +4,7 @@ class TasksController < ApplicationController
 
 
   def index
-    @tasks = BatchBook::Todo.find(:all)
+    @tasks = BatchBook::Todo.cached
   end
 
   def new

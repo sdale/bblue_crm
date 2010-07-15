@@ -22,7 +22,7 @@
               %td= contact.type.titleize
               %td= contact.created_at.to_time.strftime("%a, %d %b %Y %H:%M:%S")
               %td.last
-                = link_to "Convert", convert_contact_path(contact)
+                = link_to "Convert", convert_contact_path(contact) #if convertible?(contact)
                 = link_to "Show", contact_path(contact)
                 = link_to "Edit", edit_contact_path(contact)
                 = link_to "Delete", contact_path(contact), :method => :delete, :confirm => "Are you sure?"

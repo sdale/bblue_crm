@@ -3,7 +3,7 @@ class ContactsController < ApplicationController
   before_filter :get_contact, :except => [:index, :new]
 
   def index
-    @contacts = paginate(BatchBook::Person) | paginate(BatchBook::Company)
+    @contacts = BatchBook::Person.cached | BatchBook::Company.cached
     @contacts.sort! { |x, y| x.attributes['id'] <=> y.attributes['id']  }
   end
 
@@ -29,8 +29,9 @@ class ContactsController < ApplicationController
       flash[:notice]  = "#{type.titleize} successfully created!"
       redirect_to :action => :index
     else
+      @type = type
       flash.now[ :error ] = @contact.errors.full_messages.join( ", " )
-      render "new_#{type}"
+      render :new
     end
   end
 
@@ -52,8 +53,15 @@ class ContactsController < ApplicationController
   
   def convert
     begin
+      @contact.add_supertag 'ownership', :owner => current_user.name
       @contact.remove_tag 'lead'
       @contact.add_tag 'customer'
+      todo = BatchBook::Todo.new  :title => "Follow up with #{@contact.name}", 
+                                  :description => "Task created from a conversion from lead -> customer",
+                                  :due_date => 2.months.from_now,
+                                  :assigned_to => current_user.name,
+                                  :assigned_by => current_user.name
+      todo.save
       flash[:notice] = "Contact #{@contact.name} was successfully converted from lead to customer!!"
     rescue
       flash[:error] = "Unable to convert the contact #{@contact.name}"
