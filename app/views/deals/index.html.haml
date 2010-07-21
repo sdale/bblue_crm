@@ -1,5 +1,9 @@
 .deal
   .block
+    .secondary-navigation
+      %ul.wat-cf
+        %li.active.first= link_to "List", deals_path
+        %li= link_to "New", new_deal_path
     .content
       .inner
         - form_tag deals_path, :method => :get, :class => 'form' do
@@ -12,16 +16,16 @@
                     .left-.margin
                       - group.each do |user|
                         %p
-                          = check_box_tag 'filter[users][]', user.name
+                          = check_box_tag 'filter[users][]', user.name,false, :id => user.name.parameterize
                           = user.name
                 .left-.rmargin
                   %h4 Status
                   - status_values.in_groups_of( 2, false ) do |group|
                     .left-.margin
-                      - group.each do |num|
+                      - group.each do |status|
                         %p
-                          = check_box_tag 'filter[status][]', num
-                          = num
+                          = check_box_tag 'filter[status][]', status, false, :id => status.parameterize
+                          = status
                 .left-
                   %h4 Date
                   %br.clear

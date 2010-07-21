@@ -4,16 +4,16 @@ module ReportsControllerHelper
   Spreadsheet.client_encoding = 'UTF-8'
 
   HEADERS = {
-    'BatchBook::Deal' => [:title, :description, :deal_with, :amount, :status, :expected, :assigned_to ]
+    'Deal' => [:title, :description, :deal_with, :amount, :status, :expected, :assigned_to ]
   }
   EXTRA = {
-    'BatchBook::Deal' => [:deals_sum]
+    'Deal' => [:deals_sum]
   }
 
   def render_xls( collection, clazz )
     attributes = HEADERS[ clazz.name ]
     book = Spreadsheet::Workbook.new
-    sheet1 = book.create_worksheet :name => clazz.clean_name
+    sheet1 = book.create_worksheet :name => clazz.name
     sheet1.row(0).concat attributes.map{ |key| key.to_s.titleize }
     sheet1.row(0).default_format = Spreadsheet::Format.new  :weight => :bold
     collection.each do |model|
@@ -26,7 +26,7 @@ module ReportsControllerHelper
     EXTRA[clazz.name].each {|call| self.send(call, sheet1, collection)}
     name = "tmp/#{Time.now.strftime("%d-%m-%y-%H-%M")}.xls"
     book.write(name)
-    send_data IO.read(name) , :type => 'text/xls', :disposition => "filename=#{clazz.clean_name.pluralize}_#{Time.now.strftime("%d-%m-%y-%H-%M")}.xls"
+    send_data IO.read(name) , :type => 'text/xls', :disposition => "filename=#{clazz.name.pluralize}_#{Time.now.strftime("%d-%m-%y-%H-%M")}.xls"
     File.delete(name)
   end
 

@@ -2,7 +2,7 @@ module TagSupport
   def self.included(base)
     base.extend( ClassMethods )
     base.send( :include, InstanceMethods )
-    @name = base.clean_name
+    @name = base.name
     @param = if @name == 'Person' || @name == 'Company'
       :contact_id 
     else
@@ -15,7 +15,7 @@ module TagSupport
   
   module InstanceMethods  
     def tags
-      BatchBook::Tag.find(:all, :params => {@param => self.id})
+      Tag.find(:all, :params => {@param => self.id})
     end  
     def add_tag(name)
       raise Error, "Tag name not specified.  Usage:  obj.add_tag('tag_name')" unless name

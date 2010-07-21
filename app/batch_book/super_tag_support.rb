@@ -2,7 +2,7 @@ module SuperTagSupport
   def self.included(base)
     base.extend( ClassMethods )
     base.send( :include, InstanceMethods )
-    @name = base.clean_name
+    @name = base.name
   end
   
   module ClassMethods

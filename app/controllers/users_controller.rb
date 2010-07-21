@@ -20,7 +20,6 @@ class UsersController < ApplicationController
   def create
     @user = User.new params[:user]
     if @user.save
-      self.current_user = @user
       flash[:notice] = 'Registration was successful!'
       redirect_to users_path
     else
@@ -36,6 +35,7 @@ class UsersController < ApplicationController
   
   def destroy
     @user.destroy
+    flash[:notice] = "User successfully deleted."
     redirect_to :users
   end
   

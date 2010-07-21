@@ -24,7 +24,7 @@ module AuthenticatedSystem
     User.find_by_id( session[:user_id] )
   end
 
-  def redirect_back_or_default(default = root_url)
+  def redirect_back_or_default(default = login_users_path)
     redirect_path = session[:return_to] || default
     session[:return_to] = nil
     redirect_to( redirect_path )

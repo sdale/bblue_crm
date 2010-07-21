@@ -1,0 +1,2 @@
+class SuperTag < Base
+end

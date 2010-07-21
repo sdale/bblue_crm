@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   before_filter :login_required, :except => [:login]
   helper :all
   protect_from_forgery 
-  BatchBook::boot
   
   def paginate( model )
     load_page

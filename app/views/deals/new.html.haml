@@ -23,7 +23,7 @@
           %span.description Ex: a simple text
         
         .group
-          = f.label :ammount, "Amount", :class => :label
+          = f.label :amount, "Amount", :class => :label
           = f.text_field :amount, :class => 'text_field money'
         
         .group
@@ -41,3 +41,8 @@
         .group
           = f.label :assigned_by,  "Assigned By", :class => :label
           = f.select :assigned_by, users_for_select
+        .group.navform.wat-cf
+          %button.button{:type => 'submit'}
+            =image_tag("web-app-theme/tick.png", :alt => "Save")
+            ="Save"
+          = link_to "#{image_tag("web-app-theme/cross.png", :alt => "Cancel")}" "Cancel", users_path, :class => "button"
