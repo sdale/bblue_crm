@@ -1,0 +1,8 @@
+- @locations.each do |location|
+  %em= location['label'].titleize
+  - location.delete_if {|key,value| ['label', 'id'].include?( key ) || value.blank?}
+  - location.each do |key,value|
+    - unless value.blank?
+      %p
+        %strong= key.titleize
+        = value

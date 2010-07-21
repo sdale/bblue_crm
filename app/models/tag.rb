@@ -1,0 +1,2 @@
+class Tag < Base
+end

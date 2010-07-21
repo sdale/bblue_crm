@@ -10,7 +10,7 @@ task :backup => :environment do
       system("wget https://#{BatchBook.account}.batchbook.com/service/#{temp}.xml?limit=1000000 --no-check-certificate --user=#{BatchBook.token} --password=")
       system("mv #{Rails.root}/#{temp}.xml?limit=1000000 #{path}/#{temp}.xml")
   end
-  contacts = BatchBook::Person.find(:all) | BatchBook::Company.find(:all)
+  contacts = Person.find(:all) | Company.find(:all)
   contacts.each do |contact|
     type = contact.type.pluralize
     id = contact.attributes['id']

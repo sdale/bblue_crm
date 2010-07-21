@@ -4,7 +4,7 @@ class TasksController < ApplicationController
 
 
   def index
-    @tasks = BatchBook::Todo.cached
+    @tasks = Todo.cached
   end
 
   def new
@@ -18,7 +18,7 @@ class TasksController < ApplicationController
   end
 
   def create
-    @task = BatchBook::Todo.new params[:task]
+    @task = Todo.new params[:task]
 
     if @task.save
       flash[:notice]  = "Task successfully created!"
@@ -30,7 +30,7 @@ class TasksController < ApplicationController
   end
 
   def update
-    @task.attributes = params[:batch_book_todo]
+    @task.attributes = params[:todo]
     if @task.save
       flash[:notice]  = "Task successfully updated!"
       redirect_to :action => :index
@@ -50,7 +50,7 @@ class TasksController < ApplicationController
 
   def get_task
     begin
-      @task = BatchBook::Todo.find(params[:id])
+      @task = Todo.find(params[:id])
     rescue
       @task = nil
     end

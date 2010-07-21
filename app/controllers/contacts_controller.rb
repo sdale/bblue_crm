@@ -3,7 +3,7 @@ class ContactsController < ApplicationController
   before_filter :get_contact, :except => [:index, :new]
 
   def index
-    @contacts = BatchBook::Person.cached | BatchBook::Company.cached
+    @contacts = Person.cached | Company.cached
     @contacts.sort! { |x, y| x.attributes['id'] <=> y.attributes['id']  }
   end
 
@@ -20,9 +20,9 @@ class ContactsController < ApplicationController
   def create
     type = params[:type]
     @contact = if type == 'person'
-      BatchBook::Person.new params[:contact]
+      Person.new params[:contact]
     else
-      BatchBook::Company.new params[:contact]
+      Company.new params[:contact]
     end
 
     if @contact.save
@@ -38,9 +38,9 @@ class ContactsController < ApplicationController
   def update
     type = params[:type]
     @contact.attributes = if type == 'person'
-      params[:batch_book_person]
+      params[:person]
     else
-      params[:batch_book_company]
+      params[:company]
     end
     if @contact.save
       flash[:notice]  = "#{type.titleize} successfully updated!"
@@ -56,22 +56,22 @@ class ContactsController < ApplicationController
       @contact.add_supertag 'ownership', :owner => current_user.name
       @contact.remove_tag 'lead'
       @contact.add_tag 'customer'
-      todo = BatchBook::Todo.new  :title => "Follow up with #{@contact.name}", 
+      todo = Todo.new  :title => "Follow up with #{@contact.name}", 
                                   :description => "Task created from a conversion from lead -> customer",
                                   :due_date => 2.months.from_now,
                                   :assigned_to => current_user.name,
                                   :assigned_by => current_user.name
       todo.save
-      flash[:notice] = "Contact #{@contact.name} was successfully converted from lead to customer!!"
+      flash[:notice] = "#{@contact.name} was successfully converted from lead to customer!!"
     rescue
-      flash[:error] = "Unable to convert the contact #{@contact.name}"
+      flash[:error] = "Unable to convert #{@contact.name}"
     end
     redirect_to :action => :index
   end
 
   def destroy
     @contact.destroy
-    flash[:notice]  = "Contact successfully removed!"
+    flash[:notice]  = "Contact successfully deleted!"
     redirect_to :action => :index
   end
   
@@ -79,10 +79,10 @@ class ContactsController < ApplicationController
 
   def get_contact
     begin
-      @contact = BatchBook::Person.find(params[:id])
+      @contact = Person.find(params[:id])
     rescue
       begin
-        @contact = BatchBook::Company.find(params[:id])
+        @contact = Company.find(params[:id])
       rescue
         @contact = nil
       end

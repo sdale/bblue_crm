@@ -20,13 +20,13 @@ class IntegrityCheck
     @invalid = []
     @collection = case @type
       when :contacts
-        BatchBook::Person.find(:all) | BatchBook::Company.find(:all)
+        Person.find(:all) | Company.find(:all)
       when :deals
-        BatchBook::Deal.find(:all)
+        Deal.find(:all)
       when :todos
-        BatchBook::Todo.find(:all)
+        Todo.find(:all)
       when :communications
-        BatchBook::Communication.find(:all)
+        BCommunication.find(:all)
       else
         []
     end
@@ -71,7 +71,7 @@ class IntegrityCheck
   end
   
   def check_todos
-    todos = BatchBook::Todo.find(:all) || []
+    todos = Todo.find(:all) || []
     @collection.each do |item|
       @invalid << item unless todos.find{|todo| todo.title == item.title}
     end
