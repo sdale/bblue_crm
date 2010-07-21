@@ -48,4 +48,5 @@ Current Functionality
 To Do:
 *******************************
 - Deal close date filtering (dependent on deal SuperTags via the API, waiting ... )
+- Add check for deals without the dealinfo SuperTag to cron jobs (waiting, same as above)
 - link custom quoting app with BB
