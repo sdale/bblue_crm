@@ -23,6 +23,8 @@ class Deal < Base
         self.amount.to_f * 0.90
       when '100%'
         self.amount
+      else
+        self.amount
     end
   end
   
