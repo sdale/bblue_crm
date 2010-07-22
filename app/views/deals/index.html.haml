@@ -75,6 +75,7 @@
           .actions-bar.wat-cf
             .actions
               = link_to "#{image_tag("xls.png", :alt => "Export to XLS")} Export to XLS", deals_path(:params => params, :format => :xls), :class => "button"
+              .smalltext Right click and save as
               %br.clear
               %br.clear
               = paginate_resource
