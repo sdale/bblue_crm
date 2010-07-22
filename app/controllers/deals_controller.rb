@@ -5,13 +5,17 @@ class DealsController < ApplicationController
 
   def index
     @users = User.all
-    @people = Person.cached
+    @people = Person.find :all
     @selected_users = ['everyone']
     filter = params[:filter]
     unless filter.blank? || filter.values.delete_if{|v|v.blank?}.empty?
       @deals = []
       unless filter[:users].blank?
-        @selected_users = User.all(:conditions => {:name => filter[:users]}).map{|user|user.name} #map to user.email case you're not using cached information!
+        if Deal.caching?
+          @selected_users = User.all(:conditions => {:name => filter[:users]}).map{|user|user.name} 
+        else
+          @selected_users = User.all(:conditions => {:name => filter[:users]}).map{|user|user.email}
+        end
         @deals += Deal.find_all_by_param(:assigned_to, @selected_users)
         @selected_users = filter[:users]
       end
@@ -31,7 +35,7 @@ class DealsController < ApplicationController
       end
       @deals.uniq!
     else
-      @deals = Deal.cached('eager')
+      @deals = Deal.find :all
     end
     respond_to do |format|
       format.html

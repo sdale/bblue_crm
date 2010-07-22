@@ -4,7 +4,7 @@ class TasksController < ApplicationController
 
 
   def index
-    @tasks = Todo.cached
+    @tasks = Todo.find :all
   end
 
   def new

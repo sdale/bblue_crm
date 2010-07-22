@@ -26,7 +26,7 @@ class IntegrityCheck
       when :todos
         Todo.find(:all)
       when :communications
-        BCommunication.find(:all)
+        Communication.find(:all)
       else
         []
     end

@@ -21,6 +21,16 @@ Delete %r{/people/(\d+)\.xml} do |id|
   Dupe.delete(:human) {|h| h.id == id.to_i}
 end
 
+###### Deals ######
+Get %r{/deals\.xml\?assigned_to=(.*)} do |name|
+  Dupe.find(:deals){|d| d.assigned_to = name}
+end
+
+Get %r{/deals\.xml\?status=(.*)} do |status|
+  Dupe.find(:deals){|d| d.status = status}
+end
+
+
 ###### Locations Support ######
 
 Get %r{/people/(\d+)\/locations\.xml} do |id|
