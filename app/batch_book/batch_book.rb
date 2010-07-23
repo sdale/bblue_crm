@@ -8,7 +8,7 @@ module BatchBook
     settings = data[Rails.env] 
     self.account = settings['account']
     self.token = settings['token']
-    self.per_request = settings['per_request'] || 100
+    self.per_request = settings['per_request']
     self.caching = settings['caching']
   end
 end

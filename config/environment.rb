@@ -25,14 +25,11 @@ Rails::Initializer.run do |config|
   # config.gem "aws-s3", :lib => "aws/s3"
 
   config.gem 'haml',                    :version => '2.2.17'
-  config.gem 'will_paginate',           :version => '2.3.12'
-  config.gem 'simple-rss',              :version => '1.2.2'
   config.gem "spreadsheet",             :version => "0.6.4.1"
   
     if [ 'test', 'cucumber' ].include?( RAILS_ENV )
     config.gem "rspec",                   :lib => false,       :version => '1.3.0'
     config.gem "rspec-rails",             :lib => false,       :version => '1.3.2'
-    config.gem "remarkable_rails",        :lib => false,       :version => '3.1.12'
     config.gem 'cucumber',                :lib => false,       :version => '0.6.2'
     config.gem 'cucumber-rails',          :lib => false,       :version => '0.2.4'
     config.gem 'webrat',                  :lib => false,       :version => '0.7.0'

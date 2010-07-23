@@ -1,4 +1,4 @@
-class IntegrityCheck
+class BlackList
   
   BatchBook::boot
  
