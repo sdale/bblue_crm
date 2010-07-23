@@ -6,7 +6,7 @@ task :backup => :environment do
   path = File.join( root_path, now.year.to_s, now.month.to_s, now.day.to_s )
   system("mkdir -p #{path}")
   system("mkdir -p #{path}/supertags")
-  %w{ people companies deals tasks communications super_tags}.each do |temp|
+  %w{ people companies deals todos communications super_tags}.each do |temp|
       system("wget https://#{BatchBook.account}.batchbook.com/service/#{temp}.xml?limit=1000000 --no-check-certificate --user=#{BatchBook.token} --password=")
       system("mv #{Rails.root}/#{temp}.xml?limit=1000000 #{path}/#{temp}.xml")
   end
