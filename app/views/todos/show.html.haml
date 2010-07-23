@@ -1,0 +1,22 @@
+.block
+  .secondary-navigation
+    %ul.wat-cf
+      %li.first= link_to "List", todos_path
+      %li= link_to "New Todo", new_todo_path
+      %li.active= link_to "Show", todo_path
+  .content
+    .inner
+      - unless @todo.nil?
+        - @attributes.each do |attr|
+          - unless @todo.send(attr).blank?
+            %p
+              %strong= attr.to_s.titleize
+              - if attr=='due_date'
+                =@todo.send(attr).to_time.strftime("%a, %d %b %Y %H:%M:%S")
+              - else
+                =@todo.send(attr)
+        .wat-cf
+          = link_to "#{image_tag("web-app-theme/application_edit.png", :alt => "Edit")} Edit", edit_todo_path(@todo), :class => "button"
+          = link_to "#{image_tag("web-app-theme/cross.png", :alt => "Delete")} Delete", todo_path(@todo), :method => "delete", :class => "button", :confirm => "Are you sure?"
+      - else
+        %h1 This todo doesn't exist!

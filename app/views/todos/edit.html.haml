@@ -1,0 +1,11 @@
+.block
+  .secondary-navigation
+    %ul.wat-cf
+      %li.first= link_to "List", todos_path
+      %li= link_to "New To-Do", new_todo_path
+      %li.active= link_to "Edit", edit_todo_path
+  .content
+    %h2.title= "Edit To-Do"
+    .inner
+      - form_for @todo, :url => todo_path(@todo), :html => { :class => :form } do |f|
+        = render :partial => "form", :locals => {:f => f}

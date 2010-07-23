@@ -5,7 +5,7 @@ class DealsController < ApplicationController
 
   def index
     @users = User.all
-    @people = Person.find :all
+    @people = Person.cached
     @selected_users = ['everyone']
     filter = params[:filter]
     unless filter.blank? || filter.values.delete_if{|v|v.blank?}.empty?
@@ -24,18 +24,28 @@ class DealsController < ApplicationController
         @deals += Deal.find_all_by_param(:status, @status)
       end
       unless filter[:date_from].blank?
-        @deals += Deal.find_all_by_supertag('dealinfo') do |tag|
-          tag.first['fields']['close_date'].to_date >= filter[:date_from].to_date
+        begin
+          @deals += Deal.find_all_by_supertag('dealinfo') do |tag|
+            tag.first['fields']['close_date'].to_date >= filter[:date_from].to_date
+          end
+        rescue
+          flash[:warning] = 'Date filter is unavailable!'
         end
       end
       unless filter[:date_to].blank?
-        @deals += Deal.find_all_by_supertag('dealinfo') do |tag|
-          tag.first['fields']['close_date'].to_date <= filter[:date_to].to_date
+        begin
+          @deals += Deal.find_all_by_supertag('dealinfo') do |tag|
+            tag.first['fields']['close_date'].to_date <= filter[:date_to].to_date
+          end
+          @deals = Deal.cached
+        rescue
+          flash[:warning] = 'Date filter is unavailable!'
+          @deals = Deal.cached 
         end
       end
       @deals.uniq!
     else
-      @deals = Deal.find :all
+      @deals = Deal.cached
     end
     respond_to do |format|
       format.html
@@ -57,11 +67,13 @@ class DealsController < ApplicationController
     [:title, :description,:amount, :status, :assigned_to, :deal_with].each do |attr|
       deal_params[attr] = params[:deal][attr]
     end
-    [:title, :description, :due_date, :assigned_to, :assigned_by].each do |attr|
+    [:title, :description, :due_date, :assigned_to].each do |attr|
       task_params[attr] = params[:deal][attr]
     end
     @deal = Deal.new deal_params
     @task = Todo.new task_params
+    
+    @task.assigned_by = current_user.name
 
     if @deal.save && @task.save
       flash[:notice]  = "Deal successfully created!"

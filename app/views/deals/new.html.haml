@@ -38,9 +38,6 @@
           = f.label :assigned_to, "Assigned To", :class => :label
           = f.select :assigned_to, users_for_select
           
-        .group
-          = f.label :assigned_by,  "Assigned By", :class => :label
-          = f.select :assigned_by, users_for_select
         .group.navform.wat-cf
           %button.button{:type => 'submit'}
             =image_tag("web-app-theme/tick.png", :alt => "Save")

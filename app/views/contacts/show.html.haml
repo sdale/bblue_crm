@@ -14,7 +14,8 @@
               %strong= attr.to_s.titleize
               =@contact.send(attr)
         = #render 'contacts/locations'
-        = link_to "Convert lead to customer", convert_contact_path(@contact) if convertible?(@contact)
+        = link_to "See this contact in BatchBook", "https://#{BatchBook.account}.batchbook.com/contacts/show/#{@contact.id}"
+        = #link_to "Convert lead to customer", convert_contact_path(@contact) if convertible?(@contact)
         %br.clear
         %br.clear
         .wat-cf

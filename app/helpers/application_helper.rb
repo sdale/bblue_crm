@@ -1,26 +1,20 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
+  
+  def status_values
+    ['lost','25%','50%','75%','90%','100%']
+  end
 
   def users_for_select
     User.all.map{|u| [u.name]}.insert(0, ['Select a user', ''])
   end
-
-  ['people', 'companies'].each do |type|
-    self.module_eval %Q!
-      def #{type.pluralize}_for_select
-        #{type.singularize.capitalize}.cached.map{ |p| [p.name]}.insert(0, ['Select a #{type.singularize}', ''])
-      end
-    !  
+  
+  def people_for_select
+    Person.cached.map{|p| [p.name]}.insert(0, ['Select a person', ''])
   end
   
-  def contacts_for_select
-    contacts = Person.cached | Company.cached
-    contacts.sort! { |x, y| x.attributes['id'] <=> y.attributes['id']  }
-    contacts.map{ |c| [c.name]}.insert(0, ['Select a contact','' ])
-  end
-
-  def status_values
-    ['lost','25%','50%','75%','90%','100%']
+  def companies_for_select
+    Company.cached.map{|c| [c.name]}.insert(0, ['Select a company', ''])
   end
   
   def status_for_select

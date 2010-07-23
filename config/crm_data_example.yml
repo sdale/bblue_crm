@@ -11,18 +11,21 @@
 # Be sure to separate the class names with a comma.
 
 development:
-    account: test
+    account: dev_account
     token: zzzxxx777cccc
     per_request: 100
-    ra_feed_url: https://myacc.batchbook.com/feeds/kjkjhJHjHJhjHjhJH/activity_log.atom
-    caching: disabled
+    ra_feed_url: https://dev_account.batchbook.com/feeds/kjkjhJHjHJhjHjhJH/activity_log.atom
+        lazy: Person,Company,Todo
+        eager: Deal
 production:
-    account: test
-    token: zzzxxx777cccc
+    account: real_account
+    token: yyqqwweess1232esa
     per_request: 100
-    ra_feed_url: https://myacc.batchbook.com/feeds/kjkjhJHjHJhjHjhJH/activity_log.atom
+    ra_feed_url: https://real_account.batchbook.com/feeds/kjkj12313FsaasreH/activity_log.atom
     caching: 
         lazy: Person,Company,Todo
         eager: Deal
+cucumber:
+    caching: disabled
 
 

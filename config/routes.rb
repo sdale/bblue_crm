@@ -3,7 +3,7 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => 'users', :action => 'index'
 
   map.resources :contacts, :member => {:convert => :get}
-  map.resources :tasks
+  map.resources :todos
   map.resources :deals
   
   map.resources :users, :collection => {:login => [:get,:post], :logoff => :get}

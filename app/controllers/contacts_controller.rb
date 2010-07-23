@@ -3,7 +3,7 @@ class ContactsController < ApplicationController
   before_filter :get_contact, :except => [:index, :new]
 
   def index
-    @contacts = Person.find(:all) | Company.find(:all)
+    @contacts = Person.cached | Company.cached
     @contacts.sort! { |x, y| x.attributes['id'] <=> y.attributes['id']  }
   end
 

@@ -1,0 +1,28 @@
+.block
+  .secondary-navigation
+    %ul.wat-cf
+      %li.first.active= link_to "List", todos_path
+      %li= link_to "New To-Do", new_todo_path
+  .content
+    %h2.title= "All To-Dos"
+    .inner
+      - unless @todos.blank?
+        %table.table
+          %tr
+            %th.first ID
+            %th Title
+            %th Due Date
+            %th.last &nbsp;
+          - @todos.each do |todo|
+            %tr{:class => cycle("odd","even")}
+              %td= todo.id
+              %td= link_to todo.title, todo_path(todo)
+              %td= todo.due_date.to_time.strftime("%a, %d %b %Y %H:%M:%S")
+              %td.last
+                = link_to "Show", todo_path(todo)
+                = link_to "Edit", edit_todo_path(todo)
+                = link_to "Delete", todo_path(todo), :method => :delete, :confirm => "Are you sure?"
+        .actions-bar.wat-cf
+          .actions
+      - else
+        There are no Todos available.

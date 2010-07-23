@@ -6,4 +6,5 @@ nbproject
 *.pid
 tmp/*
 config/crm_data.yml
+config/database.yml
 
