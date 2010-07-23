@@ -71,15 +71,15 @@ class DealsController < ApplicationController
       task_params[attr] = params[:deal][attr]
     end
     @deal = Deal.new deal_params
-    @task = Todo.new task_params
+    @todo = Todo.new task_params
     
-    @task.assigned_by = current_user.name
+    @todo.assigned_by = current_user.name
 
-    if @deal.save && @task.save
+    if @deal.save && @todo.save
       flash[:notice]  = "Deal successfully created!"
       redirect_to :action => :index
     else
-      flash.now[ :error ] = @deal.errors.full_messages.join( ", " ) + @task.errors.full_messages.join( ", " )
+      flash.now[ :error ] = @deal.errors.full_messages.join( ", " ) + @todo.errors.full_messages.join( ", " )
       render :new
     end
   end

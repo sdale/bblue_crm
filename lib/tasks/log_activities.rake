@@ -1,29 +1,31 @@
-desc 'Parses a recent activity RSS feed and logs it in the database'
+desc 'Logs recent activities into the database'
 task :log_activities => :environment do
-  require 'open-uri'
-  require 'openssl'
-  
-  BatchBook::boot
-  OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
-  
-  page = 1
+  require 'digest/sha1'
+  page, logged = 1, 0
   while true
-    rss = SimpleRSS.parse open(BatchBook.ra_feed_url+"?page=#{page}")
+    exit if logged > 100
+    recent = Activity.recent(page)
     page+=1
-    unless rss.items.blank?
-      rss.items.each do |item|
-        id = item[:id].gsub(/.*\//,'')
-        content = item.content.match(/&gt;.*&lt;/).to_s.gsub(/&gt;|&lt;/, '')
-        unless Log.find_by_entry_id(id)
-          Log.create! :entry_id => id, :published => item[:published], :title => item[:title], :content => content, :updated => item[:updated], :author => item[:author]
-          puts "Entry #{id} has been logged."
+    unless recent.blank?
+      recent.each do |item|
+        secret = Digest::SHA1.hexdigest("--#{item.attributes.map{|key,val| val.to_s+"---"}}--")
+        unless Log.find_by_secret(secret)
+          Log.create! :name => item.name, 
+                      :description => item.description, 
+                      :record_type => item.record_type,
+                      :record_id => item.record_id,
+                      :user_name => item.user_name,
+                      :user_id => item.user_id,
+                      :date => item.date,
+                      :secret => secret
+          puts "Entry '#{item.name}' has been logged."
         else
-          puts "Entry #{id} is already logged. Exiting..."
-          exit
+          puts "Entry '#{item.name}' is already logged."
+          logged+=1
         end
       end
     else
-      break
+     break
     end
   end
 end

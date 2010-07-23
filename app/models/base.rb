@@ -2,13 +2,12 @@ class Base < ActiveResource::Base
   extend CachingSupport
   def self.inherited(base)
     class << base
-      attr_accessor :per_request, :ra_feed_url, :cache_type
+      attr_accessor :per_request, :cache_type
     end
     BatchBook::boot
     base.site = BatchBook.account ? "https://#{BatchBook.account}.batchbook.com/service" : ''
     base.user = BatchBook.token
     base.per_request = BatchBook.per_request
-    base.ra_feed_url = BatchBook.ra_feed_url
     if base.caching?
       options = BatchBook.caching 
       lazy = options['lazy'].split(',')

@@ -4,8 +4,6 @@
 
 # The 'per_request' value is the maximum number of objects you wish to retrieve per request on collection requests. A very high number may cause requests to time out.
 
-# The 'ra_feed_url' value is the feed URL for recent activities used in the log_activities rake task. Only necessary case you use the rake task.
-
 # The 'caching' value refers to data caching in the application. If you just want it disabled, just leave with with a 'disabled' value.
 # Case you do want it enabled, you can specify which classes should get a lazy caching (faster, less consistent) and those who get eager caching (slower, more consistent)
 # Be sure to separate the class names with a comma.
@@ -14,14 +12,12 @@ development:
     account: dev_account
     token: zzzxxx777cccc
     per_request: 100
-    ra_feed_url: https://dev_account.batchbook.com/feeds/kjkjhJHjHJhjHjhJH/activity_log.atom
         lazy: Person,Company,Todo
         eager: Deal
 production:
     account: real_account
     token: yyqqwweess1232esa
     per_request: 100
-    ra_feed_url: https://real_account.batchbook.com/feeds/kjkj12313FsaasreH/activity_log.atom
     caching: 
         lazy: Person,Company,Todo
         eager: Deal

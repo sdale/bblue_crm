@@ -9,18 +9,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100624021236) do
+ActiveRecord::Schema.define(:version => 20100723040130) do
 
   create_table "logs", :force => true do |t|
-    t.integer  "entry_id",  :null => false
-    t.datetime "published", :null => false
-    t.string   "title",     :null => false
-    t.string   "content",   :null => false
-    t.date     "updated",   :null => false
-    t.string   "author",    :null => false
+    t.string   "name",        :null => false
+    t.string   "description"
+    t.datetime "date",        :null => false
+    t.string   "user_name"
+    t.integer  "user_id"
+    t.string   "record_type"
+    t.integer  "record_id"
+    t.string   "secret"
   end
-
-  add_index "logs", ["entry_id"], :name => "index_logs_on_entry_id"
 
   create_table "users", :force => true do |t|
     t.string   "login",         :null => false
