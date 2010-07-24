@@ -1,4 +1,4 @@
-desc "Checks the integrity of all BatchBlue data and outputs a file with all the data that doesn't match"
+desc "Checks the integrity of all BatchBook data and outputs a file with all the data that doesn't match"
 task :integrity_check => :environment do
   require "#{Rails.root}/lib/tasks/black_list.rb"
   root_path = "#{Rails.root}/tmp/integrity_check"

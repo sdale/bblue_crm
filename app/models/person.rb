@@ -1,6 +1,5 @@
 class Person < Base
   include TagSupport, LocationSupport, SuperTagSupport, CommentSupport, ExtraSupport
-
   def type
     'person'
   end
