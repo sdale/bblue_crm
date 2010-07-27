@@ -18,8 +18,8 @@ module AuthenticatedUser
   module ClassMethods
 
     # Authenticates a user by their email and unencrypted password.  Returns the user or nil.
-    def authenticate(login, password)
-      u = User.find_by_login login
+    def authenticate(email, password)
+      u = User.find_by_email email
       u && u.authenticated?(password) ? u : nil
     end
 
@@ -35,7 +35,7 @@ module AuthenticatedUser
     # before filter
     def encrypt_password
       return if self.password.blank?
-      self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s(:db)}--#{self.login}--") if self.new_record?
+      self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s(:db)}--#{self.email}--") if self.new_record?
       self.password_hash = encrypt(self.password)
     end
 

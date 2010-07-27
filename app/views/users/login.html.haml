@@ -5,8 +5,8 @@
     .content.login
       - form_tag login_users_path, :method => :post, :class => 'form login' do       
         .group.wat-cf
-          .left= label_tag :login, "Login",:class => 'label right'
-          .right= text_field_tag :login, {}, :class => 'text_field'
+          .left= label_tag :email, "Email",:class => 'label right'
+          .right= text_field_tag :email, {}, :class => 'text_field'
         
         .group.wat-cf
           .left= label_tag :password, "Password",:class => 'label right'

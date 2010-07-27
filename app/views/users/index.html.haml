@@ -9,16 +9,14 @@
       %table.table
         %tr
           %th.first ID 
-          %th Login
+          %th Email
           %th Name
-          %th E-mail
           %th.last &nbsp;
         - @users.each do |user|
           %tr{:class => cycle("odd","even")}
             %td= user.id
-            %td= link_to user.login, user_path(user)
+            %td= link_to user.email, user_path(user)
             %td= user.name
-            %td= user.email
             %td.last
               = link_to "Show", user_path(user)
               = link_to "Edit", edit_user_path(user)

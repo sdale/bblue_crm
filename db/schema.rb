@@ -23,7 +23,6 @@ ActiveRecord::Schema.define(:version => 20100723040130) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "login",         :null => false
     t.string   "name",          :null => false
     t.string   "email",         :null => false
     t.string   "salt",          :null => false
@@ -32,6 +31,6 @@ ActiveRecord::Schema.define(:version => 20100723040130) do
     t.datetime "updated_at"
   end
 
-  add_index "users", ["login"], :name => "index_users_on_login", :unique => true
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
 
 end

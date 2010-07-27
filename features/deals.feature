@@ -4,7 +4,7 @@ Feature: Deals reports
   wants to be able to list and filter deals by who they're assigned to
   
   Background:
-  	Given I am logged in as "admin" with the "123456" password
+  	Given I am logged in as "default@default.com" with the "123456" password
   		And there are a few users registered
   		And there are a few deals registered
   

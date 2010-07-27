@@ -41,7 +41,7 @@ class UsersController < ApplicationController
   
   def login
     if request.post?
-      @user = User.authenticate(params[:login], params[:password])
+      @user = User.authenticate(params[:email], params[:password])
       if @user
         self.current_user = @user
         flash[:notice] = "Login successful!"

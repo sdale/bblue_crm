@@ -4,7 +4,7 @@ Feature: Contact management
   wants to be able to list, create, update and destroy contacts
   
   Background:
-  	Given I am logged in as "admin" with the "123456" password
+  	Given I am logged in as "default@default.com" with the "123456" password
   
   Scenario: Listing contacts
   	Given there are a few contacts registered
