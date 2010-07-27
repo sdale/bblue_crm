@@ -7,11 +7,23 @@ task :integrity_check => :environment do
   deals = BlackList.new :deals, root_path
   contacts = BlackList.new :contacts, root_path
   
-  [deals, contacts].each{|var| var.check_tags }
+  puts "Checking tags..."
+  
+  contacts.check_tags
+  
+  puts "Finished checking tags..."
+  
+  puts "Checking supertags..."
   
   contacts.check_supertags
   
+  puts "Finished checking supertags..."
+  
+  puts "Checking to-tos..."
+  
   deals.check_todos
   [deals, contacts].each{|var| var.generate_report }
+  
+  puts "Finished checking to-dos."
   
 end

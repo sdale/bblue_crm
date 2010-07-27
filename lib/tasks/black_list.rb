@@ -3,13 +3,13 @@ class BlackList
   BatchBook::boot
  
   TAGS_REQUIRED = {:contacts => ['lead', 'customer'], 
-                   :deals => ['dealinfo']
+                   :deals => []
                    }
   TAGS_ALLOWED = {:contacts => ['ucemployee'], 
                   :deals => []
                   }
   SUPERTAGS_REQUIRED = {:contacts => ['ownership', 'source'], 
-                        :deals => []
+                        :deals => ['dealinfo']
                         }
                         
   attr_reader :type, :invalid
@@ -35,14 +35,29 @@ class BlackList
   def generate_report
     @invalid.uniq!
     File.open("#{@path}/#{@type.to_s}.html", "w") do |file|
-      file << "<html><body style='text-align:center'><h1>Report on Integrity Check for #{@type.to_s.titleize}</h1>"
-      file << "<h2>Created at #{Time.now}</h2>"
-      file << "<h3>Total number of records: #{@collection.size}</h3>"
-      file << "<h3>Total number of failing records: #{@invalid.size}</h3>"
+      file << %Q{
+      <style>body,td{text-align:center}table{width:50%;margin-left:350px}</style>
+      <html><body><h1>Report on Integrity Check for #{@type.to_s.titleize}</h1>
+      <h2>Created at #{Time.now}</h2>
+      <h3>Total number of records: #{@collection.size}</h3>
+      <h3>Total number of failing records: #{@invalid.size}</h3>
+      <h4>Required tags: #{TAGS_REQUIRED[@type].join(',')}</h4>
+      <h4>Required supertags: #{SUPERTAGS_REQUIRED[@type].join(',')}</h4>
+      <table border=1>
+      <tr>
+        <th>Record</th>
+        <th>Invalidation Reason</th>
+      </tr>
+      }
       @invalid.each do |invalid_item|
-        file << "<a href='https://#{BatchBook.account}.batchbook.com/#{@type.to_s}/show/#{invalid_item.id}'>#{invalid_item.name}</a><br/><br/>"
+        file << %Q{
+        <tr>
+          <td><a href='https://#{BatchBook.account}.batchbook.com/#{@type.to_s}/show/#{invalid_item.id}'>#{invalid_item.name}</a></td>
+          <td>#{invalid_item.reason}</td>
+        </tr>
+        }
       end
-      file << "</body></html>"
+      file << "</table></body></html>"
     end
   end
   
@@ -52,6 +67,7 @@ class BlackList
       tags = attr.blank? ? nil : attr.attributes.delete("tag").to_a.map{|tag|tag.name}
       next unless (tags & TAGS_ALLOWED[@type]).blank?
       @invalid << item if (tags & TAGS_REQUIRED[@type]).blank?
+      add_reason(item, "Does not have all its required tags.")
     end
   end
   
@@ -63,6 +79,7 @@ class BlackList
           temp = supertags.find{|e| e['name'] == supertag}
           if temp.blank? || temp['fields'].blank?
             @invalid << item
+            add_reason(item, "Does not have all its required supertags.")
             break
           end
         end
@@ -73,7 +90,20 @@ class BlackList
   def check_todos
     todos = Todo.find(:all) || []
     @collection.each do |item|
-      @invalid << item unless todos.find{|todo| todo.title == item.title}
+      unless todos.find{|todo| todo.title == item.title}
+        @invalid << item 
+        add_reason(item, 'Does not have a corresponding To-Do')
+      end
     end
+  end
+  
+  private
+  
+  def add_reason(item, reason)
+    item.instance_eval %Q{
+      def reason
+        '#{reason}'
+      end
+    }
   end
 end
