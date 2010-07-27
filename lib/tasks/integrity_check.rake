@@ -22,8 +22,10 @@ task :integrity_check => :environment do
   puts "Checking to-tos..."
   
   deals.check_todos
-  [deals, contacts].each{|var| var.generate_report }
-  
+    
   puts "Finished checking to-dos."
+  
+  puts "Generating report..."
+  [deals, contacts].each{|var| var.generate_report }
   
 end
