@@ -33,6 +33,8 @@ task :integrity_check => :environment do
   puts "Generating report..."
   [deals, contacts].each{|var| var.generate_report }
   
-  system("zip tmp/BB_CRM_integrity_check_#{Time.now.strftime("%m%d%y")} -r #{ENV['path'] || root_path}")
+  zip_path = "tmp/BB_CRM_integrity_check_#{Time.now.strftime("%m%d%y")}"
+  system("zip #{zip_path} -r #{root_path}")
   system("rm -r #{root_path}")
+  system("mv #{zip_path}.zip #{ENV['path']}") if ENV['path']
 end

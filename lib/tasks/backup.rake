@@ -10,7 +10,7 @@ desc 'Backup CRM data'
 task :backup => :environment do
   BatchBook::boot
   root_path = "#{Rails.root}/tmp/backup"
-  now = Time.now
+  puts "root: #{root_path}"
   system("mkdir -p #{root_path}")
   system("mkdir -p #{root_path}/supertags")
   %w{ people companies deals todos communications super_tags}.each do |temp|
@@ -28,6 +28,8 @@ task :backup => :environment do
       download_and_move(download_command, move_command)
     end
   end
-  system("zip tmp/BB_CRM_backup_#{Time.now.strftime("%m%d%y")} -r #{ENV['path'] || root_path}")
+  zip_path = "tmp/BB_CRM_backup_#{Time.now.strftime("%m%d%y")}"
+  system("zip #{zip_path} -r #{root_path}")
   system("rm -r #{root_path}")
+  system("mv #{zip_path}.zip #{ENV['path']}") if ENV['path']
 end
