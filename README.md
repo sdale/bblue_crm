@@ -1,10 +1,10 @@
-Read the full documentation on "our wiki":http://wiki.github.com/sdale/bblue_crm/
+Read the full documentation on [our wiki](http://wiki.github.com/sdale/bblue_crm/)
 =================================================================================
 
 BatchBook Integration
 ---------------------
 
-We at "UsedCisco.com":http://www.usedcisco.com use "BatchBook CRM":http://batchblue.com/product-info.html and build custom tools using their API to fill gaps that our business requires.
+We at [UsedCisco.com](http://www.usedcisco.com) use [BatchBook CRM](http://batchblue.com/product-info.html) and build custom tools using their API to fill gaps that our business requires.
 
 ### Technical Notes
 
