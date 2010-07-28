@@ -1,5 +1,4 @@
 def download_and_move(download_command, move_command, counter=1)
-  puts "COUNTER:#{counter}" 
   return if counter >= 3
   unless system(download_command)  && system(move_command)
     sleep 1
