@@ -1,12 +1,9 @@
-def download_and_move(download_command, move_command)
-  counter = 0
-  begin
-    counter +=1
-    system(download_command) 
-    system(move_command)
-  rescue
+def download_and_move(download_command, move_command, counter=1)
+  puts "COUNTER:#{counter}" 
+  return if counter >= 3
+  unless system(download_command)  && system(move_command)
     sleep 1
-    retry unless counter >= 3
+    download_and_move(download_command, move_command, counter+1)
   end 
 end
 
