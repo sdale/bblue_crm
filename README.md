@@ -1,10 +1,12 @@
-h1. Read the full documentation on "our wiki":http://wiki.github.com/sdale/bblue_crm/
+Read the full documentation on "our wiki":http://wiki.github.com/sdale/bblue_crm/
+=================================================================================
 
-h2. BatchBook Integration
+BatchBook Integration
+---------------------
 
 We at "UsedCisco.com":http://www.usedcisco.com use "BatchBook CRM":http://batchblue.com/product-info.html and build custom tools using their API to fill gaps that our business requires.
 
-h3. Technical Notes
+### Technical Notes
 
 * Installation and Configuration 
 * Setting Up Users
@@ -15,7 +17,7 @@ h3. Technical Notes
 * Utility Tasks
 * Misc Notes
 
-h3. Business Notes
+### Business Notes
 
 BatchBooks is an excellent cloud-based CRM service. 
 Although it is growing quickly and already has a nice mature API, every business has specific needs, 
@@ -38,7 +40,7 @@ Most importantly, please offer feedback and feel free to extend it.
 The critical part though is understanding how we use the system currently, and building on this correctly.
 
 *******************************
-h4. Rough business overview
+*Rough business overview*
 
 * We use a system of tagging individuals and contacts as either leads (prospects) or customers to indicate
   status and ownership. 
@@ -52,7 +54,7 @@ h4. Rough business overview
 * Each deal gets a SuperTag called dealinfo. In it are a few fields that is used in reporting and filtering
 
 *******************************
-h4. Current Functionality
+*Current Functionality*
 
 * A more detailed pipeline reporting system that the stock BatchBooks. Using SuperTags to calculate custom 
   fields and filters. The goal is to easily see each salesperson's deals, current status and a pseudo pipeline.
@@ -61,13 +63,13 @@ h4. Current Functionality
   which contacts do not have ownership, or do not have either the Lead or Customer tag.
 
 *******************************
-h4. To Do:
+*To Do*
 
 * Deal close date filtering (dependent on deal SuperTags via the API, waiting ... )
 * Add check for deals without the dealinfo SuperTag to cron jobs (waiting, same as above)
 * Link custom quoting app with BB
 
 *******************************
-h3. Extend it!
+### Extend it!
 
 If our business model of dealing with the CRM suits you, awesome, you gain a whole application for free, but if it doesn't, feel free to create your own features and be sure to share it with us!
