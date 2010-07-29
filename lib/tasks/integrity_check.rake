@@ -37,7 +37,7 @@ task :integrity_check => :environment do
   puts "Finished checking statuses."
   
   puts "Generating report..."
-  [deals].each{|var| var.generate_report }
+  [deals,contacts].each{|var| var.generate_report }
   zip_path = "tmp/BB_CRM_integrity_check_#{Time.now.strftime("%m%d%y")}"
   system("zip #{zip_path} -r #{root_path}")
   system("rm -r #{root_path}")
