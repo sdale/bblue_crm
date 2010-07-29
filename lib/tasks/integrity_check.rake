@@ -6,11 +6,11 @@ task :integrity_check => :environment do
       require( File.join(dirname, f) )
     end
   end
-  root_path = ENV['path'] || "#{Rails.root}/tmp/integrity_check"
+  root_path = "#{Rails.root}/tmp/integrity_check"
   system("mkdir -p #{root_path}")
 
   deals = BlackListBuilder.new :deals, root_path
-  contacts = BlackListBuilder.new :contacts, root_path
+  contacts = ContactListBuilder.new root_path
   
   puts "Checking tags..."
   
@@ -30,11 +30,21 @@ task :integrity_check => :environment do
     
   puts "Finished checking to-dos."
   
-  puts "Generating report..."
-  [deals, contacts].each{|var| var.generate_report }
+  puts "Checking statuses..."
   
+  deals.check_status
+    
+  puts "Finished checking statuses."
+  
+  puts "Generating report..."
+  [deals].each{|var| var.generate_report }
   zip_path = "tmp/BB_CRM_integrity_check_#{Time.now.strftime("%m%d%y")}"
   system("zip #{zip_path} -r #{root_path}")
   system("rm -r #{root_path}")
-  system("mv #{zip_path}.zip #{ENV['path']}") if ENV['path']
+  if ENV['path']
+    unless system("mv #{zip_path}.zip #{ENV['path']}")
+      puts "Unable to move #{zip_path}.zip to #{ENV['path']}. Please check system permissions and make sure the target path exists."
+    end
+  end
+   
 end

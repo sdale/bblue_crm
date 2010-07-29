@@ -10,7 +10,6 @@ desc 'Backup CRM data'
 task :backup => :environment do
   BatchBook::boot
   root_path = "#{Rails.root}/tmp/backup"
-  puts "root: #{root_path}"
   system("mkdir -p #{root_path}")
   system("mkdir -p #{root_path}/supertags")
   %w{ people companies deals todos communications super_tags}.each do |temp|
@@ -31,5 +30,9 @@ task :backup => :environment do
   zip_path = "tmp/BB_CRM_backup_#{Time.now.strftime("%m%d%y")}"
   system("zip #{zip_path} -r #{root_path}")
   system("rm -r #{root_path}")
-  system("mv #{zip_path}.zip #{ENV['path']}") if ENV['path']
+  if ENV['path']
+    unless system("mv #{zip_path}.zip #{ENV['path']}")
+      puts "Unable to move #{zip_path}.zip to #{ENV['path']}. Please check system permissions and make sure the target path exists."
+    end
+  end
 end

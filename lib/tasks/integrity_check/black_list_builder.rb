@@ -36,6 +36,8 @@ class BlackListBuilder
   end
   
   def generate_report
+    #Hack for deals
+    @black_list.items.delete_if{|i| i.record.status == '100%' || i.record.status == 'lost'} if @type == :deals
     @white_list.each {|allowed_item| @black_list.items.delete_if{|i| i.record == allowed_item}}
     File.open("#{@path}/#{@type.to_s}.html", "w") do |file|
       file << %Q{
@@ -75,33 +77,39 @@ class BlackListBuilder
       conditional_tags = decoy.find_all{|tag| tag.is_a?(Array)} 
       conditional_tags.each do |tag_collection|
         if (tags & tag_collection).blank?
-          invalid_item = @black_list << item
-          invalid_item.add_reason("Does not have one of these tags: #{tag_collection.join(',')}.")
+          @black_list.add item, "Does not have one of these tags: #{tag_collection.join(',')}."
         end
       end
       decoy.delete_if{|tag| tag.is_a?(Array)}
       comparison = tags & decoy
       if !decoy.blank? && comparison != decoy
         missing = comparison.blank? ? decoy : decoy - comparison
-        invalid_item = @black_list << item
-        invalid_item.add_reason("Does not have these tags: #{missing.uniq.join(',')}.")
+        @black_list.add item, "Does not have these tags: #{missing.uniq.join(',')}."
       end
     end
   end
   
   def check_supertags
     @collection.each do |item|
+      attr = item.attributes['tags']
+      tags = attr.blank? ? nil : attr.attributes['tag'].to_a.map{|tag|tag.name.to_s}
+      result = @supertags_required & tags
+      if result.blank?
+        @black_list.add item, "Does not have these supertags: #{@supertags_required.join(',')}."
+        next
+      end
       missing = []
       supertags = item.supertags
-      unless supertags.nil?
+      unless supertags.blank?
         @supertags_required.each do |supertag|
           temp = supertags.find{|e| e['name'] == supertag}
           missing << supertag if temp.blank? || temp['fields'].blank?
         end
         unless missing.blank?
-          invalid_item = @black_list << item
-          invalid_item.add_reason("Does not have these supertags: #{missing.uniq.join(',')}.")
-        end  
+          @black_list.add item, "Does not have these supertags: #{missing.uniq.join(',')}."
+        end
+      else
+        @black_list.add item, "Does not have these supertags: #{@supertags_required.join(',')}."
       end 
     end
   end
@@ -110,8 +118,15 @@ class BlackListBuilder
     todos = Todo.find(:all) || []
     @collection.each do |item|
       unless todos.find{|todo| todo.title == item.title}
-        invalid_item = @black_list << item
-        invalid_item.add_reason("Does not have a corresponding To-Do.")
+        @black_list.add item, "Does not have a corresponding To-Do."
+      end
+    end
+  end
+  
+  def check_status
+    @collection.each do |item|
+      if item.status.blank?
+        @black_list.add item, "Does not have a status defined."
       end
     end
   end

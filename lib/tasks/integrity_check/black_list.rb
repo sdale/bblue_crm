@@ -6,14 +6,14 @@ class BlackList
     @items = []
   end
   
-  def <<(record)
+  def add(record, reason)
     item = Item.new(record)
     other = @items.find{|i| i.record == record}
     if other.nil?
       @items << item
-      item
+      item.add_reason(reason)
     else
-      other
+      other.add_reason(reason)
     end  
   end
 
