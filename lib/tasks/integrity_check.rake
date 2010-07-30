@@ -12,17 +12,17 @@ task :integrity_check => :environment do
   deals = BlackListBuilder.new :deals, root_path
   contacts = ContactListBuilder.new root_path
   
-  puts "Checking tags..."
-  
-  contacts.check_tags
-  
-  puts "Finished checking tags..."
-  
   puts "Checking supertags..."
   
   contacts.check_supertags
   
   puts "Finished checking supertags..."
+  
+  puts "Checking tags..."
+  
+  contacts.check_tags
+  
+  puts "Finished checking tags..."
   
   puts "Checking to-tos..."
   
@@ -37,7 +37,11 @@ task :integrity_check => :environment do
   puts "Finished checking statuses."
   
   puts "Generating report..."
-  [deals,contacts].each{|var| var.generate_report }
+  
+  deals.generate_report
+  
+  contacts.generate_report
+  
   zip_path = "tmp/BB_CRM_integrity_check_#{Time.now.strftime("%m%d%y")}"
   system("zip #{zip_path} -r #{root_path}")
   system("rm -r #{root_path}")

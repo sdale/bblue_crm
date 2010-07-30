@@ -20,13 +20,14 @@ class ContactList
 end
 
 class Contact
-  attr_accessor :record, :tags, :ownership, :source
+  attr_accessor :record, :tags, :ownership, :source, :has_source
   
   def initialize(record)
     @record = record
     @ownership = nil
     @tags = nil
     @source = nil
+    @has_source = nil
   end
   
   def tags?
@@ -35,5 +36,9 @@ class Contact
   
   def source?
     !@source.blank?
+  end
+  
+  def has_source?
+    !@has_source.blank?
   end
 end
