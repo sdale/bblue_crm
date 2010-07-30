@@ -12,17 +12,18 @@ task :integrity_check => :environment do
   deals = BlackListBuilder.new :deals, root_path
   contacts = ContactListBuilder.new root_path
   
-  puts "Checking supertags..."
-  
-  contacts.check_supertags
-  
-  puts "Finished checking supertags..."
-  
   puts "Checking tags..."
   
   contacts.check_tags
   
   puts "Finished checking tags..."
+  
+  puts "Checking supertags..."
+  
+  contacts.check_supertags
+  
+  puts "Finished checking supertags..."
+
   
   puts "Checking to-tos..."
   
@@ -42,9 +43,9 @@ task :integrity_check => :environment do
   
   contacts.generate_report
   
-  zip_path = "tmp/BB_CRM_integrity_check_#{Time.now.strftime("%m%d%y")}"
-  system("zip #{zip_path} -r #{root_path}")
-  system("rm -r #{root_path}")
+  #zip_path = "tmp/BB_CRM_integrity_check_#{Time.now.strftime("%m%d%y")}"
+  #system("zip #{zip_path} -r #{root_path}")
+  #system("rm -r #{root_path}")
   if ENV['path']
     unless system("mv #{zip_path}.zip #{ENV['path']}")
       puts "Unable to move #{zip_path}.zip to #{ENV['path']}. Please check system permissions and make sure the target path exists."

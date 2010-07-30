@@ -8,13 +8,17 @@ class ContactList
   
   def add(record)
     item = Contact.new(record)
-    other = @items.find{|i| i.record == record}
+    other = self.find(record)
     if other.nil?
       @items << item
       item
     else
       other
     end  
+  end
+  
+  def find(record)
+    @items.find{|i| i.record == record}
   end
 
 end
