@@ -53,6 +53,7 @@ If you do not want to use request limitation on a request, you may pass a disabl
 Important Notes
 ---------------
 Since this was originally designed to deal with the [BatchBook CRM API](http://developer.batchblue.com/), these features will *only* work if the backend server (the one who's supplying objects) implements:
+
 * Both 'limit' and 'offset' parameters. Required for the request limitation feature.
 * An 'updated_since' parameter. Required for the caching feature (eager caching).
 
