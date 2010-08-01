@@ -6,9 +6,14 @@ Features
 --------
 
 ### Caching
-All object collections are cached into your Rails environment's cache store. This way you can browse through your application without having to load object collections from their external source all the time, reducing request time from minutes to miliseconds.
+All object collections are cached in files, this way you can browse through your application without having to load object collections from their external source all the time, reducing request time from minutes to miliseconds.
 
-Caching is divided into 2 groups:
+Be sure to set your cache store configuration to file_store:
+
+	#config/environment.rb
+	config.cache_store = :file_store, 'tmp/cache'
+
+Caching is being divided into 2 groups:
 * Lazy: fast, inconsistent. On the first request the data is all cached and never recaches again until you explicitely tell it to (via some rake task or script/console). Smart choice for large collections that rarely change.
 * Eager: slow, consistent. At every request the system checks for a change in the object collection and recaches case there is one. Smart choice for small collections that are always changing.
 
