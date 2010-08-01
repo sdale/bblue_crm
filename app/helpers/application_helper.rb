@@ -6,15 +6,15 @@ module ApplicationHelper
   end
 
   def users_for_select
-    User.all.map{|u| [u.name]}.insert(0, ['Select a user', ''])
+    User.all.map{|u| [u.name,u.email]}.insert(0, ['Select a user', ''])
   end
   
   def people_for_select
-    Person.cached.map{|p| [p.name]}.insert(0, ['Select a person', ''])
+    Person.find(:all).map{|p| [p.name]}.insert(0, ['Select a person', ''])
   end
   
   def companies_for_select
-    Company.cached.map{|c| [c.name]}.insert(0, ['Select a company', ''])
+    Company.find(:all).map{|c| [c.name]}.insert(0, ['Select a company', ''])
   end
   
   def status_for_select

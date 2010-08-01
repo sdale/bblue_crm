@@ -23,13 +23,13 @@ class BlackListBuilder
     @supertags_required = SUPERTAGS_REQUIRED[@type]
     @collection = case @type
       when :contacts
-        Person.find(:all) | Company.find(:all)
+        Person.all(:disable_caching => true) | Company.all(:disable_caching => true)
       when :deals
-        Deal.find(:all)
+        Deal.all(:disable_caching => true)
       when :todos
-        Todo.find(:all)
+        Todo.all(:disable_caching => true)
       when :communications
-        Communication.find(:all)
+        Communication.all(:disable_caching => true)
       else
         []
     end

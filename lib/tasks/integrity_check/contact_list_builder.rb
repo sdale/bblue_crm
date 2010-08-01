@@ -9,7 +9,7 @@ class ContactListBuilder
     @tags_required = ['lead', 'customer' ]
     @tags_allowed = ['ucemployee']
     @supertags_required = ['ownership', 'source']
-    @collection = Person.find(:all) | Company.find(:all)
+    @collection = Person.all(:disable_caching => true) | Company.all(:disable_caching => true)
   end
   
   def generate_report

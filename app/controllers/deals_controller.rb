@@ -5,7 +5,7 @@ class DealsController < ApplicationController
 
   def index
     @users = User.all
-    @people = Person.cached
+    @people = Person.all
     @selected_users = ['everyone']
     filter = params[:filter]
     unless filter.blank? || filter.values.delete_if{|v|v.blank?}.empty?
@@ -37,15 +37,15 @@ class DealsController < ApplicationController
           @deals += Deal.find_all_by_supertag('dealinfo') do |tag|
             tag.first['fields']['close_date'].to_date <= filter[:date_to].to_date
           end
-          @deals = Deal.cached
+          @deals = Deal.all
         rescue
           flash[:warning] = 'Date filter is unavailable!'
-          @deals = Deal.cached 
+          @deals = Deal.all 
         end
       end
       @deals.uniq!
     else
-      @deals = Deal.cached
+      @deals = Deal.all
     end
     respond_to do |format|
       format.html

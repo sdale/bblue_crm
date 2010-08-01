@@ -1,5 +1,6 @@
 class Base < ActiveResource::Base
-  extend CachingSupport
+  extend RequestLimitation
+  extend Caching
   def self.inherited(base)
     class << base
       attr_accessor :per_request, :cache_type
@@ -16,6 +17,30 @@ class Base < ActiveResource::Base
     super
   end
   
+  def self.all(*args)
+    self.find(:all, *args)
+  end
+  
+  def self.caching_conditions(*args)
+    options = args.extract_options!
+    if self.caching?
+      options[:caching] = self.cache_type unless options[:caching]
+      args << options
+    else
+      nil
+    end
+  end
+  
+  def self.request_limitation_conditions(*args)
+    options = args.extract_options!
+    unless self.per_request.nil? || self.name == 'Todo'
+      options[:request_limit] = self.per_request
+      args << options
+    else
+      nil
+    end  
+  end
+  
   def self.caching?
     !BatchBook.caching.nil? && BatchBook.caching != 'disabled'
   end
@@ -24,38 +49,16 @@ class Base < ActiveResource::Base
     data.each {|key, value|self.send(key+'=', value)} 
   end
   
-  def self.find(*args)
-    return super(*args) if self.per_request.nil? || args.first != :all || self.name == 'Todo' #quickfix until BB implements offset and limit params on todos API
-    total, counter = [], 0
-    while true
-      options = args.extract_options!
-      return super(*args << options) if options[:skip]
-      params = options[:params] || {}
-      params = params.merge(:limit => self.per_request)
-      params = params.merge(:offset => self.per_request * counter)
-      options = options.merge(:params => params)
-      args << options
-      temp = super(*args)
-      if temp.blank?
-        break
-      else
-        total << temp
-        counter+=1
-      end
-    end
-    total.flatten
-  end
-  
   def self.paginate(page, per_page=10)
-    self.find(:all, :params => {:limit => per_page, :offset => (page * per_page) - per_page }, :skip => true)
+    self.all(:params => {:limit => per_page, :offset => (page * per_page) - per_page }, :disable_request_limitation => true, :disable_caching => true)
   end
   
   def self.find_all_by_param(name, params, cached = true)
     array = []
     if cached && caching?
-      params.each{|param|array += self.cached('eager').find_all{|obj|obj.send(name) == param}}
+      params.each{|param|array += self.all(:caching => 'eager').find_all{|obj|obj.send(name) == param}}
     else
-      params.each{|param|array += self.find(:all, :params => {name => param}, :skip => true )}
+      params.each{|param|array += self.all(:params => {name => param}, :disable_request_limitation => true, :disable_caching => true )}
     end
     array
   end

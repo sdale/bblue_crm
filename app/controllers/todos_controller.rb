@@ -4,7 +4,7 @@ class TodosController < ApplicationController
 
 
   def index
-    @todos = Todo.cached
+    @todos = Todo.all
   end
 
   def new

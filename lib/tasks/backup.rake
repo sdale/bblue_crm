@@ -17,7 +17,7 @@ task :backup => :environment do
     move_command = "mv #{Rails.root}/#{temp}.xml?limit=1000000 #{root_path}/#{temp}.xml"
     download_and_move(download_command, move_command)
   end
-  contacts = Person.find(:all) | Company.find(:all)
+  contacts = Person.all(:disable_caching => true) | Company.all(:disable_caching => true)
   contacts.each do |contact|
     type = contact.type.pluralize
     id = contact.attributes['id']
