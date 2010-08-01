@@ -1,6 +1,4 @@
 class Base < ActiveResource::Base
-  extend RequestLimitation
-  extend Caching
   def self.inherited(base)
     class << base
       attr_accessor :per_request, :cache_type
@@ -21,25 +19,21 @@ class Base < ActiveResource::Base
     self.find(:all, *args)
   end
   
-  def self.caching_conditions(*args)
+  def self.find(*args)
     options = args.extract_options!
     if self.caching?
       options[:caching] = self.cache_type unless options[:caching]
-      args << options
     else
-      nil
+      options[:disable_caching] = true
     end
-  end
-  
-  def self.request_limitation_conditions(*args)
-    options = args.extract_options!
     unless self.per_request.nil? || self.name == 'Todo'
       options[:request_limit] = self.per_request
-      args << options
     else
-      nil
-    end  
+      options[:disable_request_limitation] = true
+    end 
+    super(*args << options)
   end
+  
   
   def self.caching?
     !BatchBook.caching.nil? && BatchBook.caching != 'disabled'

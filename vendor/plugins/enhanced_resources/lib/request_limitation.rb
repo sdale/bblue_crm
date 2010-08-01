@@ -2,8 +2,8 @@ module RequestLimitation
   
   def find(*args)
     options = args.extract_options!
-    return super(*args) unless args.first == :all && !options[:disable_request_limitation] && self.respond_to?(:request_limitation_conditions) && self.request_limitation_conditions(*args)
-    args = request_limitation_conditions(*args << options)
+    return super(*args << options) if args.first != :all || options[:disable_request_limitation]
+    args << options
     total, counter = [], 0
     while true
       options = args.extract_options!
@@ -12,8 +12,7 @@ module RequestLimitation
       params = params.merge(:limit => request_limit)
       params = params.merge(:offset => request_limit * counter)
       options = options.merge(:params => params)
-      args << options
-      temp = super(*args)
+      temp = super(*args << options)
       if temp.blank?
         break
       else

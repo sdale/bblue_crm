@@ -2,9 +2,7 @@ module Caching
   
   def find(*args)
     options = args.extract_options!
-    return super(*args << options) unless args.first == :all && !options[:disable_caching] && self.respond_to?(:caching_conditions) && caching_conditions(*args)
-    args = caching_conditions(*args << options)
-    options = args.extract_options!
+    return super(*args << options) if args.first != :all || options[:disable_caching]
     type = options[:caching] || 'eager'
     self.recache unless Rails.cache.exist?(self.name)
     case type
