@@ -61,7 +61,7 @@ class ContactListBuilder
       supertags = item.supertags
       ownership = supertags.find{|e| e['name'] == 'ownership'}
       source = supertags.find{|e| e['name'] == 'source'}
-      if ownership.blank? || source.blank?
+      if ownership.blank? || ownership['fields'].blank? || source.blank? || source['fields'].blank? 
         contact = @contact_list.add item
       else
         contact = @contact_list.find item
