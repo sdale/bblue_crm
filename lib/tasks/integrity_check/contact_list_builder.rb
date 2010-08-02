@@ -14,6 +14,7 @@ class ContactListBuilder
   
   def generate_report
     @white_list.each {|allowed_item| @contact_list.items.delete_if{|i| i.record == allowed_item}}
+    @contact_list.assign_tags
     File.open("#{@path}/contacts.html", "w") do |file|
       file << "<style>body,th,td{text-align:center}table{width:50%;margin-left:350px;border:2px solid}.lb{border-left:2px solid}</style><html><body>"
       User.all.each do |user|
@@ -32,13 +33,7 @@ class ContactListBuilder
       @white_list << item unless (tags & @tags_allowed).blank? 
       result = tags & @tags_required
       if result.blank? || result == @tags_required || result == @tags_required.reverse
-        contact = @contact_list.add item 
-        unless result.blank?
-          contact.tags = true 
-          puts "#{item.name} has both the lead and customer tags!"
-        else
-          puts "#{item.name} doesn't have either the customer or lead tags!"
-        end
+        contact = @contact_list.add item
         puts "...#{item.name} failed TAGS check."
       else
         puts "...#{item.name} passed the TAGS check!"
@@ -90,7 +85,7 @@ class ContactListBuilder
       string << %Q{
      <tr>
       <td><a href='https://#{BatchBook.account}.batchbook.com/contacts/show/#{item.record.id}'>#{item.record.name}</a></td>
-      <td class="lb"><input type="checkbox" #{item.tags? ? "checked" : ""} disabled/></td><td><input type="checkbox" #{item.tags? ? "checked" : ""} disabled/></td>
+      <td class="lb"><input type="checkbox" #{item.lead? ? "checked" : ""} disabled/></td><td><input type="checkbox" #{item.customer? ? "checked" : ""} disabled/></td>
       <td class="lb"><input type="checkbox" #{item.has_source? ? "checked" : ""} disabled/></td><td><input type="checkbox" #{item.source? ? "checked" : ""} disabled/></td>
       </tr>
         }
