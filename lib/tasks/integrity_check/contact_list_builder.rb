@@ -4,11 +4,11 @@ class ContactListBuilder
   BatchBook::boot
   def initialize(path)          
     @path = path
-    @contact_list = ContactList.new
     @white_list = []
     @tags_required = ['lead', 'customer' ]
     @tags_allowed = ['ucemployee']
     @supertags_required = ['ownership', 'source']
+    @contact_list = ContactList.new(@tags_required)
     @collection = Person.all(:disable_caching => true) | Company.all(:disable_caching => true)
   end
   
@@ -30,6 +30,7 @@ class ContactListBuilder
   
   def generate_report
     @white_list.each {|allowed_item| @contact_list.items.delete_if{|i| i.record == allowed_item}}
+    @contact_list.assign_values
     File.open("#{@path}/contacts.html", "w") do |file|
       file << self.css 
       file << "<html><body>"
@@ -49,13 +50,7 @@ class ContactListBuilder
       @white_list << item unless (tags & @tags_allowed).blank? 
       result = tags & @tags_required
       if result.blank? || result == @tags_required || result == @tags_required.reverse
-        contact = @contact_list.add item 
-        unless result.blank?
-          contact.tags = true 
-          puts "#{item.name} has both the lead and customer tags!"
-        else
-          puts "#{item.name} doesn't have either the customer or lead tags!"
-        end
+        @contact_list.add item
         puts "...#{item.name} failed TAGS check."
       else
         puts "...#{item.name} passed the TAGS check!"
@@ -70,7 +65,6 @@ class ContactListBuilder
       tags = attr.blank? ? [] : attr.attributes['tag'].to_a.map{|tag|tag.name.to_s}
       result = @supertags_required & tags
       if result.blank?
-        puts "#{item.name} doesn't have a single SUPERTAG!"
         puts "...#{item.name} failed the SUPERTAGS check."
         @contact_list.add item
         next
@@ -78,21 +72,13 @@ class ContactListBuilder
       supertags = item.supertags
       ownership = supertags.find{|e| e['name'] == 'ownership'}
       source = supertags.find{|e| e['name'] == 'source'}
-      if ownership.blank? || source.blank?
-        contact = @contact_list.add item
+      if ownership.blank? || ownership['fields'].blank? || source.blank? || source['fields'].blank? 
+        @contact_list.add item, supertags
+        puts "...#{item.name} failed the SUPERTAGS check."
       else
         contact = @contact_list.find item
-      end
-      unless contact.nil?
-        unless ownership.blank?
-          contact.ownership = ownership['fields']['owner'] 
-          puts "Assigning ownership to: #{contact.ownership || 'unassigned'}"
-        end
-        unless source.blank?
-          contact.source = source['fields']['source'] 
-          puts "Assigning source to: #{contact.source || 'unassigned'}"
-        end
-        contact.has_source = true unless source.nil?
+        contact.supertags = supertags unless contact.nil?
+        puts "...#{item.name} passed the SUPERTAGS check!"
       end
     end
   end

@@ -48,13 +48,13 @@ class Base < ActiveResource::Base
   end
   
   def self.find_all_by_param(name, params, cached = true)
-    array = []
+    result = []
     if cached && caching?
-      params.each{|param|array += self.all(:caching => 'eager').find_all{|obj|obj.send(name) == param}}
+      params.each{|param|result += self.all(:caching => 'eager').find_all{|obj|obj.send(name) == param}}
     else
-      params.each{|param|array += self.all(:params => {name => param}, :disable_request_limitation => true, :disable_caching => true )}
+      params.each{|param|result += self.all(:params => {name => param}, :disable_request_limitation => true, :disable_caching => true )}
     end
-    array
+    result
   end
   
 end

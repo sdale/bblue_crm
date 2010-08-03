@@ -9,7 +9,7 @@ end
 desc 'Backup CRM data'
 task :backup => :environment do
   BatchBook::boot
-  root_path = "#{Rails.root}/tmp/backup"
+  root_path = "tmp/backup"
   system("mkdir -p #{root_path}")
   system("mkdir -p #{root_path}/supertags")
   %w{ people companies deals todos communications super_tags}.each do |temp|

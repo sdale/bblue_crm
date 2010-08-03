@@ -30,6 +30,16 @@ Feature: Deals reports
   	When I check a few status options
   		And I press "Filter"
   	Then I should see results filtered by their status
+  	
+  	
+ Scenario: Searching by users and status
+ 	Given I am on the deals page
+ 		And I check a few users' name
+ 		And I check a few status options
+ 	When I press "Filter"
+ 	Then I should see results filtered by their status
+ 		And I should see results filtered by their status
+ 		
   
   Scenario: Creating a deal
   	Given I am on the deals page
