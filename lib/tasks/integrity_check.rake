@@ -6,7 +6,7 @@ task :integrity_check => :environment do
       require( File.join(dirname, f) )
     end
   end
-  root_path = "#{Rails.root}/tmp/integrity_check"
+  root_path = "tmp/integrity_check"
   system("mkdir -p #{root_path}")
 
   deals = BlackListBuilder.new :deals, root_path

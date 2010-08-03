@@ -1,49 +1,16 @@
 class DealsController < ApplicationController
   include ReportsControllerHelper
+  include DealsControllerHelper
 
   before_filter :get_deal, :except => [:index, :new, :create]
 
   def index
     @users = User.all
     @people = Person.all
-    @selected_users = ['everyone']
     filter = params[:filter]
+    @selected_users = selected_users(filter)
     unless filter.blank? || filter.values.delete_if{|v|v.blank?}.empty?
-      @deals = []
-      unless filter[:users].blank?
-        if Deal.caching?
-          @selected_users = User.all(:conditions => {:name => filter[:users]}).map{|user|user.name} 
-        else
-          @selected_users = User.all(:conditions => {:name => filter[:users]}).map{|user|user.email}
-        end
-        @deals += Deal.find_all_by_param(:assigned_to, @selected_users)
-        @selected_users = filter[:users]
-      end
-      unless filter[:status].blank?
-        @status = filter[:status]
-        @deals += Deal.find_all_by_param(:status, @status)
-      end
-      unless filter[:date_from].blank?
-        begin
-          @deals += Deal.find_all_by_supertag('dealinfo') do |tag|
-            tag.first['fields']['close_date'].to_date >= filter[:date_from].to_date
-          end
-        rescue
-          flash[:warning] = 'Date filter is unavailable!'
-        end
-      end
-      unless filter[:date_to].blank?
-        begin
-          @deals += Deal.find_all_by_supertag('dealinfo') do |tag|
-            tag.first['fields']['close_date'].to_date <= filter[:date_to].to_date
-          end
-          @deals = Deal.all
-        rescue
-          flash[:warning] = 'Date filter is unavailable!'
-          @deals = Deal.all 
-        end
-      end
-      @deals.uniq!
+      @deals = final_report(filter)
     else
       @deals = Deal.all
     end
