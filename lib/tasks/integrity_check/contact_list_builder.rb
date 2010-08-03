@@ -99,12 +99,12 @@ class ContactListBuilder
     collection.each do |item|
       string << %Q{
      <tr>
-     <td class="lb"><input type="checkbox" #{item.tags? ? "checked" : ""} /></td><td><input type="checkbox" #{item.tags? ? "checked" : ""} /></td>
-     <td class="lb"><input type="checkbox" #{item.has_source? ? "checked" : ""} /></td><td><input type="checkbox" #{item.source? ? "checked" : ""} /></td>
-     <td>
+      <td class="lb"><input type="checkbox" #{item.lead? ? "checked" : ""} /></td><td><input type="checkbox" #{item.customer? ? "checked" : ""} /></td>
+      <td class="lb"><input type="checkbox" #{item.has_source? ? "checked" : ""} /></td><td><input type="checkbox" #{item.source? ? "checked" : ""} /></td>
+      <td>
         <a href='https://#{BatchBook.account}.batchbook.com/contacts/show/#{item.record.id}' target="_blank">#{item.record.name}</a>
       </td>
-      </tr>
+    </tr>
         }
     end
       string << "</table>"
