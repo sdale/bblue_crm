@@ -12,14 +12,31 @@ class ContactListBuilder
     @collection = Person.all(:disable_caching => true) | Company.all(:disable_caching => true)
   end
   
+  def css
+      css = "<style>"
+      css << %Q@ 
+        body        { font-family: verdana, helvetica, sans-serif; }
+        a           { text-decoration:none; font-size:12px;} 
+        a:hover     { background: #e4e4e4; padding:10px 0 10px 0; font-size:12px; text-decoration:underline;}
+        table       { width:500px; border:2px solid #e7eeff; margin:0 0 50px 0}
+        table td    { padding:2px 10px 2px 10px;  }
+        table th    { padding:10px 10px 10px 10px; text-align:left; color:#838383; background: #e7eeff; margin:0;}
+        .lb         { border-left:2px solid #e7eeff; }
+        .who        { margin: 10px 20px 0 0; text-align:right; font-weight:bold; color:gray; float:left;width:200px;}
+        @
+      css << "</style>"
+    css  
+  end
+  
   def generate_report
     @white_list.each {|allowed_item| @contact_list.items.delete_if{|i| i.record == allowed_item}}
     File.open("#{@path}/contacts.html", "w") do |file|
-      file << "<style>body,th,td{text-align:center}table{width:50%;margin-left:350px;border:2px solid}.lb{border-left:2px solid}</style><html><body>"
+      file << self.css 
+      file << "<html><body>"
       User.all.each do |user|
-        file << self.generate_table("Salesperson: #{user.name}", @contact_list.items.find_all{|item| item.ownership == user.email})
+        file << self.generate_table("<div class='who'>#{user.name}</div>", @contact_list.items.find_all{|item| item.ownership == user.email})
       end
-      file << self.generate_table("Unassigned", @contact_list.items.find_all{|item| item.ownership.blank?})
+      file << self.generate_table("<div class='who'>Unassigned</div>", @contact_list.items.find_all{|item| item.ownership.blank?})
       file << "</body></html>"
     end
   end
@@ -69,11 +86,11 @@ class ContactListBuilder
       unless contact.nil?
         unless ownership.blank?
           contact.ownership = ownership['fields']['owner'] 
-          puts "Assining ownership to: #{contact.ownership || 'unassigned'}"
+          puts "Assigning ownership to: #{contact.ownership || 'unassigned'}"
         end
         unless source.blank?
           contact.source = source['fields']['source'] 
-          puts "Assining source to: #{contact.source || 'unassigned'}"
+          puts "Assigning source to: #{contact.source || 'unassigned'}"
         end
         contact.has_source = true unless source.nil?
       end
@@ -83,15 +100,24 @@ class ContactListBuilder
   def generate_table(title, collection)
     string = %Q{
       #{title}
-      <table>
-    <tr><th>Record</th><th>L</th><th>C</th><th>S</th><th>SV</th></tr>
+      <table cellspacing="0" cellpadding="0">
+        <tr>
+        <th>L</th>
+        <th>C</th>
+        <th>S</th>
+        <th>SV</th>
+          <th>Company<br>
+              Individual</th>
+        </tr>
     }
     collection.each do |item|
       string << %Q{
      <tr>
-      <td><a href='https://#{BatchBook.account}.batchbook.com/contacts/show/#{item.record.id}'>#{item.record.name}</a></td>
-      <td class="lb"><input type="checkbox" #{item.tags? ? "checked" : ""} disabled/></td><td><input type="checkbox" #{item.tags? ? "checked" : ""} disabled/></td>
-      <td class="lb"><input type="checkbox" #{item.has_source? ? "checked" : ""} disabled/></td><td><input type="checkbox" #{item.source? ? "checked" : ""} disabled/></td>
+     <td class="lb"><input type="checkbox" #{item.tags? ? "checked" : ""} /></td><td><input type="checkbox" #{item.tags? ? "checked" : ""} /></td>
+     <td class="lb"><input type="checkbox" #{item.has_source? ? "checked" : ""} /></td><td><input type="checkbox" #{item.source? ? "checked" : ""} /></td>
+     <td>
+        <a href='https://#{BatchBook.account}.batchbook.com/contacts/show/#{item.record.id}' target="_blank">#{item.record.name}</a>
+      </td>
       </tr>
         }
     end
