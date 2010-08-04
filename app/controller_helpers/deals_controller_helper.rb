@@ -11,7 +11,7 @@ module DealsControllerHelper
       deals += Deal.find_all_by_param(:status, filter[:status]) unless filter[:status].blank?
       deals += date_filter(:>=) unless filter[:date_from].blank?
       deals += date_filter(:<=) unless filter[:date_from].blank?
-      deals.delete_if{|deal| !filter[:status].include?(deal.status)} if filter[:users] && filter[:status]
+      deals.delete_if{|deal| !filter[:status].include?(deal.status) || !filter[:users].include?(deal.assigned_to)} if filter[:users] && filter[:status]
       deals.uniq
   end
   
