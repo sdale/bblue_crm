@@ -26,5 +26,11 @@ task :recache do
   run "cd #{release_path}; rake recache --trace RAILS_ENV=production"
 end
 
+desc "Fix log"
+task :fix_log do
+  run "cd #{release_path}; rm log; mkdir log; echo '' > log/production.log"
+end
+
 after "deploy:update_code", "custom_symlinks"
 after "custom_symlinks", "recache"
+after "recache", "fix_log"
