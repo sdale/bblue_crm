@@ -32,5 +32,5 @@ task :fix_log do
 end
 
 after "deploy:update_code", "custom_symlinks"
-after "custom_symlinks", "recache"
-after "recache", "fix_log"
+after "custom_symlinks", "fix_log"
+after "fix_log", "recache"
