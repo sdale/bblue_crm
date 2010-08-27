@@ -31,6 +31,11 @@ task :fix_log do
   run "cd #{release_path}; rm log; mkdir log; echo '' > log/production.log"
 end
 
+desc "Backup, compress and store production db"
+task :backup do
+  run "cd #{release_path}; rake utilities:db:backup"
+end
+
 after "deploy:update_code", "custom_symlinks"
 after "custom_symlinks", "fix_log"
 after "fix_log", "recache"
