@@ -33,6 +33,7 @@ end
 
 desc "Backup, compress and store production db"
 task :backup do
+  run "cd /"
   run "cd #{release_path}; rake utilities:db:backup"
 end
 
