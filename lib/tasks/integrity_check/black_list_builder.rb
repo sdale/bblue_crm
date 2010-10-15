@@ -71,7 +71,7 @@ class BlackListBuilder
   def check_tags
     @collection.each do |item|
       attr = item.attributes['tags']
-      tags = attr.blank? ? nil : attr.attributes.delete("tag").to_a.map{|tag|tag.name}
+      tags = attr.blank? ? [] : attr.map{|a| a.attributes['name'] if a.attributes['supertag'] == 'false'}
       decoy = @tags_required.clone
       @white_list << item unless (tags & @tags_allowed).blank?
       conditional_tags = decoy.find_all{|tag| tag.is_a?(Array)} 
@@ -92,18 +92,13 @@ class BlackListBuilder
   def check_supertags
     @collection.each do |item|
       attr = item.attributes['tags']
-      tags = attr.blank? ? nil : attr.attributes['tag'].to_a.map{|tag|tag.name.to_s}
-      result = @supertags_required & tags
-      if result.blank?
-        @black_list.add item, "Does not have these supertags: #{@supertags_required.join(',')}."
-        next
-      end
+      tags = attr.blank? ? [] : attr.map{|a| a.attributes['name'] if a.attributes['supertag'] == 'true'}
+      supertags = attr.find_all{|a| a.attributes['supertag'] == 'true'}
       missing = []
-      supertags = item.supertags
       unless supertags.blank?
         @supertags_required.each do |supertag|
-          temp = supertags.find{|e| e['name'] == supertag}
-          missing << supertag if temp.blank? || temp['fields'].blank?
+          temp = supertags.find{|e| e.name == supertag}
+          missing << supertag if temp.blank? || temp.fields.blank?
         end
         unless missing.blank?
           @black_list.add item, "Does not have these supertags: #{missing.uniq.join(',')}."

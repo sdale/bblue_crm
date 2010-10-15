@@ -12,22 +12,6 @@ class ContactListBuilder
     @collection = Person.all(:disable_caching => true) | Company.all(:disable_caching => true)
   end
   
-  def css
-      css = "<style>"
-      css << %Q@ 
-        body        { font-family: verdana, helvetica, sans-serif; }
-        a           { text-decoration:none; font-size:12px;} 
-        a:hover     { background: #e4e4e4; padding:10px 0 10px 0; font-size:12px; text-decoration:underline;}
-        table       { width:500px; border:2px solid #e7eeff; margin:0 0 50px 0}
-        table td    { padding:2px 10px 2px 10px;  }
-        table th    { padding:10px 10px 10px 10px; text-align:left; color:#838383; background: #e7eeff; margin:0;}
-        .lb         { border-left:2px solid #e7eeff; }
-        .who        { margin: 10px 20px 0 0; text-align:right; font-weight:bold; color:gray; float:left;width:200px;}
-        @
-      css << "</style>"
-    css  
-  end
-  
   def generate_report
     @white_list.each {|allowed_item| @contact_list.items.delete_if{|i| i.record == allowed_item}}
     @contact_list.assign_values
@@ -46,7 +30,7 @@ class ContactListBuilder
     @collection.each do |item|
       puts "\nStarting TAG check on #{item.name}..."
       attr = item.attributes['tags']
-      tags = attr.blank? ? [] : attr.attributes['tag'].to_a.map{|tag|tag.name}
+      tags = attr.blank? ? [] : attr.map{|a| a.attributes['name'] if a.attributes['supertag'] == 'false'}
       @white_list << item unless (tags & @tags_allowed).blank? 
       result = tags & @tags_required
       if result.blank? || result == @tags_required || result == @tags_required.reverse
@@ -62,17 +46,10 @@ class ContactListBuilder
     @collection.each do |item|
       puts "\nStarting SUPERTAG check on #{item.name}..."
       attr = item.attributes['tags']
-      tags = attr.blank? ? [] : attr.attributes['tag'].to_a.map{|tag|tag.name.to_s}
-      result = @supertags_required & tags
-      if result.blank?
-        puts "...#{item.name} failed the SUPERTAGS check."
-        @contact_list.add item
-        next
-      end
-      supertags = item.supertags
-      ownership = supertags.find{|e| e['name'] == 'ownership'}
-      source = supertags.find{|e| e['name'] == 'source'}
-      if ownership.blank? || ownership['fields'].blank? || source.blank? || source['fields'].blank? 
+      supertags = attr.find_all{|a| a.attributes['supertag'] == 'true'}
+      ownership = supertags.find{|e| e.name == 'ownership'}
+      source    = supertags.find{|e| e.name == 'source'}
+      if ownership.blank? || ownership.fields.blank? || source.blank? || source.fields.blank? 
         @contact_list.add item, supertags
         puts "...#{item.name} failed the SUPERTAGS check."
       else
@@ -109,6 +86,22 @@ class ContactListBuilder
     end
       string << "</table>"
       string
-   end
+  end
+  
+  def css
+    css = "<style>"
+    css << %Q@ 
+      body        { font-family: verdana, helvetica, sans-serif; }
+      a           { text-decoration:none; font-size:12px;} 
+      a:hover     { background: #e4e4e4; padding:10px 0 10px 0; font-size:12px; text-decoration:underline;}
+      table       { width:500px; border:2px solid #e7eeff; margin:0 0 50px 0}
+      table td    { padding:2px 10px 2px 10px;  }
+      table th    { padding:10px 10px 10px 10px; text-align:left; color:#838383; background: #e7eeff; margin:0;}
+      .lb         { border-left:2px solid #e7eeff; }
+      .who        { margin: 10px 20px 0 0; text-align:right; font-weight:bold; color:gray; float:left;width:200px;}
+      @
+    css << "</style>"
+    css  
+  end
   
 end

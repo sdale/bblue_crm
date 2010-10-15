@@ -35,28 +35,31 @@ task :backup => :environment do
       download_command = "wget https://#{BatchBook.account}.batchbook.com/service/#{params} --no-check-certificate --user=#{BatchBook.token} --password="
       move_command = "mv #{Rails.root}/#{params} #{file_name}"
       break unless download_and_move(download_command, move_command, file_name)
+      break if temp == 'todos' #BatchBook did not implement pagination on Todos yet.
       offset += LIMIT
     end
   end
   
   # Since this is a small file, it stays out of the pagination
-  system("mkdir -p #{root_path}/super_tags")
   download_command = "wget https://#{BatchBook.account}.batchbook.com/service/super_tags.xml?limit=#{LIMIT} --no-check-certificate --user=#{BatchBook.token} --password="
-  move_command = "mv #{Rails.root}/super_tags.xml?limit=#{LIMIT} #{root_path}/super_tags/super_tags.xml"
+  move_command = "mv #{Rails.root}/super_tags.xml?limit=#{LIMIT} #{root_path}/super_tags.xml"
   download_and_move(download_command, move_command)   
   
+  # EDIT: Since all supertags now appear on the object, there is no need to make extra calls.
+  
   # Gets all contacts and downloads their specific supertag values
-  contacts = Person.all(:disable_caching => true) | Company.all(:disable_caching => true)
-  contacts.each do |contact|
-    type = contact.type.pluralize
-    id = contact.attributes['id']
-    unless contact.supertags.blank?
-      params = "super_tags.xml?limit=#{LIMIT}"
-      download_command = "wget https://#{BatchBook.account}.batchbook.com/service/#{type}/#{id}/#{params} --no-check-certificate --user=#{BatchBook.token} --password="
-      move_command = "mv #{Rails.root}/#{params} #{root_path}/super_tags/#{id}.xml"
-      download_and_move(download_command, move_command)
-    end
-  end
+  
+#  contacts = Person.all(:disable_caching => true) | Company.all(:disable_caching => true)
+#  contacts.each do |contact|
+#    type = contact.type.pluralize
+#    id = contact.attributes['id']
+#    unless contact.supertags.blank?
+#      params = "super_tags.xml?limit=#{LIMIT}"
+#      download_command = "wget https://#{BatchBook.account}.batchbook.com/service/#{type}/#{id}/#{params} --no-check-certificate --user=#{BatchBook.token} --password="
+#      move_command = "mv #{Rails.root}/#{params} #{root_path}/super_tags/#{id}.xml"
+#      download_and_move(download_command, move_command)
+#    end
+#  end
   
   # Zips everything into a single file and moves it to some path provided at the console.
   zip_path = "tmp/BB_CRM_backup_#{Time.now.strftime("%m%d%y")}"

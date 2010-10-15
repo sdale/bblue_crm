@@ -24,23 +24,23 @@ class ContactList
   def assign_values
     @items.each do |item|
       attr = item.record.attributes['tags']
-      tags = attr.blank? ? [] : attr.attributes['tag'].to_a.map{|tag|tag.name.to_s}
+      tags = attr.blank? ? [] : attr.map{|a| a.attributes['name'] if a.attributes['supertag'] == 'false'}
       @tags_required.each do |tag_required|
         if tags.include?(tag_required)
           puts "#{item.record.name} has the #{tag_required} tag."
           item.send("#{tag_required}=", true)
         end
       end
-      supertags = item.supertags
+      supertags = attr.find_all{|a| a.attributes['supertag'] == 'true'}
       unless supertags.blank?
-        ownership = supertags.find{|e| e['name'] == 'ownership'}
-        source = supertags.find{|e| e['name'] == 'source'}
+        ownership = supertags.find{|e| e.name == 'ownership'}
+        source    = supertags.find{|e| e.name == 'source'}
         unless ownership.blank?
-          item.ownership = ownership['fields']['owner'] 
+          item.ownership = ownership.fields.owner unless ownership.fields.blank?
           puts "#{item.record.name} ownership value: #{item.ownership || 'unassigned'}"
         end
         unless source.blank?
-          item.source = source['fields']['source'] 
+          item.source = source.fields.source unless source.fields.blank?
           puts "#{item.record.name} source value: #{item.source || 'unassigned'}"
         end
         item.has_source = true unless source.nil?

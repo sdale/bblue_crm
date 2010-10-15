@@ -43,13 +43,13 @@ task :integrity_check => :environment do
   
   contacts.generate_report
   
-  zip_path = "tmp/BB_CRM_integrity_check_#{Time.now.strftime("%m%d%y")}"
-  system("zip #{zip_path} -r #{root_path}")
-  system("rm -r #{root_path}")
-  if ENV['path']
-    unless system("mv #{zip_path}.zip #{ENV['path']}")
-      puts "Unable to move #{zip_path}.zip to #{ENV['path']}. Please check system permissions and make sure the target path exists."
-    end
-  end
+#  zip_path = "tmp/BB_CRM_integrity_check_#{Time.now.strftime("%m%d%y")}"
+#  system("zip #{zip_path} -r #{root_path}")
+#  system("rm -r #{root_path}")
+#  if ENV['path']
+#    unless system("mv #{zip_path}.zip #{ENV['path']}")
+#      puts "Unable to move #{zip_path}.zip to #{ENV['path']}. Please check system permissions and make sure the target path exists."
+#    end
+#  end
    
 end
