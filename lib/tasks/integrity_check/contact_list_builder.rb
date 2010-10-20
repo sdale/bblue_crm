@@ -42,14 +42,14 @@ class ContactListBuilder
     end
   end
   
-  def check_supertags
+  def check_supertags(hide_sources = false)
     @collection.each do |item|
       puts "\nStarting SUPERTAG check on #{item.name}..."
       attr = item.attributes['tags']
       supertags = attr.find_all{|a| a.attributes['supertag'] == 'true'}
       ownership = supertags.find{|e| e.name == 'ownership'}
       source    = supertags.find{|e| e.name == 'source'}
-      if ownership.blank? || ownership.fields.blank? || source.blank? || source.fields.blank? 
+      if ownership.blank? || ownership.fields.blank? || ((source.blank? || source.fields.blank?) && !hide_sources) 
         @contact_list.add item, supertags
         puts "...#{item.name} failed the SUPERTAGS check."
       else
