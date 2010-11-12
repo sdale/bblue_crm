@@ -1,4 +1,6 @@
 namespace :utilities do
+
+  # Custom backup tasks for backuping up reports and database dumps
   
   namespace :db do
     
@@ -16,7 +18,7 @@ namespace :utilities do
   end
   
   namespace :misc do
-  
+    
     desc "Run different versions of Integrity check"
     task :backup_integrity_reports do
       now = Time.now
