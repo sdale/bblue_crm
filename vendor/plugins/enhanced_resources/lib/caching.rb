@@ -22,7 +22,9 @@ module Caching
     last = self.find(:last, :params => {:updated_since => now})
     Rails.cache.write('last_id', last.nil? ? 0 : last.id)
     Rails.cache.write('last_time', now)
-    Rails.cache.write(self.name, self.find(:all, :disable_caching => true).to_yaml)
+    #Rails.cache.write(self.name, self.find(:all, :disable_caching => true).to_yaml)
+    all = self.find(:all, :disable_caching => true)
+    Rails.cache.write(self.name, all.to_yaml) unless all.blank?
   end
   
 end
