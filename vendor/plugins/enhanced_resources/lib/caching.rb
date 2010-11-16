@@ -13,7 +13,8 @@ module Caching
         last_object = super(:last, :params => {:updated_since => last_time})
         self.recache if last_id.nil? || (last_object && last_id != last_object.id)
     end
-    YAML::load(Rails.cache.read(self.name))
+		result = Rails.cache.read(self.name)
+		result.blank? ? [] : YAML::load(result)
   end
   
   def recache
@@ -22,7 +23,6 @@ module Caching
     last = self.find(:last, :params => {:updated_since => now})
     Rails.cache.write('last_id', last.nil? ? 0 : last.id)
     Rails.cache.write('last_time', now)
-    #Rails.cache.write(self.name, self.find(:all, :disable_caching => true).to_yaml)
     all = self.find(:all, :disable_caching => true)
     Rails.cache.write(self.name, all.to_yaml) unless all.blank?
   end
